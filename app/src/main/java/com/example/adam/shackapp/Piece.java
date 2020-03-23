@@ -8,10 +8,12 @@ public class Piece {
     public Piece(String type, String color){
         this.type = type;
         this.color = color;
-        this.moves = getMoves(type);
+//        this.moves = getMoves(type);
     }
 
-
+public static void main(String[] args){
+    System.out.println("lol");
+    }
 
    /* private int[] getMoves(String type){
         switch (type){
