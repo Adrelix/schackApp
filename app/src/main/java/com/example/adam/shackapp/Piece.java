@@ -9,6 +9,7 @@ public class Piece {
     public Piece(String type, String color, int initialPosition){
         this.type = type;
         this.color = color;
+<<<<<<< HEAD
         this.currentPosition = initialPosition;
         this.moves = getMoves(type);
     }
@@ -20,6 +21,14 @@ public class Piece {
         }
     }
 
+=======
+//        this.moves = getMoves(type);
+    }
+
+public static void main(String[] args){
+    System.out.println("lol");
+    }
+>>>>>>> e8de87f44bbd543bfc5065839854618f49cbd9d9
 
    private int[] getMoves(String type){
         switch (type){
