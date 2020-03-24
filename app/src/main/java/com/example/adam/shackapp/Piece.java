@@ -9,9 +9,8 @@ public class Piece {
     public Piece(String type, String color, int initialPosition){
         this.type = type;
         this.color = color;
-<<<<<<< HEAD
         this.currentPosition = initialPosition;
-        this.moves = getMoves(type);
+  //      this.moves = getMoves(type);
     }
 
     public static void main(String[] args){
@@ -21,10 +20,13 @@ public class Piece {
         }
     }
 
-=======
 //        this.moves = getMoves(type);
+public int[] getMoves(){
+        int[] list = {currentPosition + 3};
+        return list;
     }
-
+}
+/*
 public static void main(String[] args){
     System.out.println("lol");
     }
@@ -81,3 +83,5 @@ public static void main(String[] args){
         
     } 
 }
+
+*/
