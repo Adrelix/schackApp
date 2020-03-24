@@ -77,9 +77,6 @@ public class GameBoard extends AppCompatActivity {
                     public void onClick(View v)  {
                         tiles[currTile].onClick();
                         onPressedTile(currTile);
-                        Toast toast = Toast.makeText(getApplicationContext(), ("" + tiles[currTile].isOccupied), Toast.LENGTH_SHORT);
-                        toast.show();
-
                     }
                 });
             }
@@ -116,7 +113,19 @@ public class GameBoard extends AppCompatActivity {
         if(tiles[prevSelectedTile].color.equals("white")){tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(R.drawable.ic_launcher_foreground));}         //reset color on tile
         else{tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(R.drawable.ic_launcher_background));}          //reset color on tile
 
-        //TODO check if a possible move is clicked and then proceed to update game values for that move
+        //check if a possible move is clicked and then proceed to update game values for that move
+        for (int move : moves){
+            if(selectedTile == move){
+                if(getPieceIDAt(move) >= 0){                                //check if move is to an occupied tile
+                    pieces[getPieceIDAt(move)].currentPosition = -10;       //delete any piece that stands at tile moved to
+                }
+                pieces[getPieceIDAt(prevSelectedTile)].currentPosition=move;        //Update the moved pieces currentPosition
+                updatePieces();
+                if(currentTurnColor.equals("white")){currentTurnColor="black";}
+                else{currentTurnColor="white";}
+            }
+        }
+
 
 
         //Reset textures for all possible moves
@@ -125,19 +134,18 @@ public class GameBoard extends AppCompatActivity {
             else if(tiles[move].color.equals("black")){tiles[move].button.setBackground(getResources().getDrawable(R.drawable.ic_launcher_background));}
         }
 
-        prevSelectedTile = -1;          //reset value on prevselectedtile
+        prevSelectedTile = -1;    //reset value on prevselectedtile
     }
     else{
-        if(tiles[selectedTile].isOccupied && pieces[getPieceIDAt(selectedTile)].color.equals(currentTurnColor)){             //Is this an non-empty tile that belongs to current player
+        if(getPieceIDAt(selectedTile)>=0 && pieces[getPieceIDAt(selectedTile)].color.equals(currentTurnColor)){             //Is this an non-empty tile that belongs to current player
             prevSelectedTile = selectedTile;                    //set this tile to previous selected tile
-            tiles[selectedTile].button.setBackgroundColor(Color.parseColor("#FFC0CB"));             //Highlight tile
+            tiles[selectedTile].button.setBackgroundColor(getResources().getColor(R.color.selectedTile));             //Highlight tile
 
             moves = pieces[getPieceIDAt(selectedTile)].getMoves();
 
             for(int move : moves){
-                tiles[move].button.setBackgroundColor(Color.parseColor("#add8e6"));
+                tiles[move].button.setBackgroundColor(getResources().getColor(R.color.highlightedTile));         //Highlight possible moves
             }
-            //TODO highlight possible moves
         }
         else{
             return;
@@ -225,7 +233,7 @@ public class GameBoard extends AppCompatActivity {
 
         //Updating all tiles with current piece-values
         for (Piece piece : pieces) {
-            if (piece.color.equals("black")) {
+            if (piece.color.equals("black") && piece.currentPosition >=0) {
                 switch (piece.type) {
                     case "bonde":
                         tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_farmer));
@@ -246,7 +254,7 @@ public class GameBoard extends AppCompatActivity {
                         tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_king));
                         break;
                 }
-            } else {
+            } else if (piece.color.equals("white") && piece.currentPosition >=0){
                 switch (piece.type) {
                     case "bonde":
                         tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.white_farmer));

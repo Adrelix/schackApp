@@ -22,7 +22,7 @@ public class Piece {
 
 //        this.moves = getMoves(type);
 public int[] getMoves(){
-        int[] list = {currentPosition + 3};
+        int[] list = {currentPosition -8, currentPosition + 8};
         return list;
     }
 }
