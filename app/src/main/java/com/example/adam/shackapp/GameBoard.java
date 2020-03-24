@@ -136,8 +136,10 @@ public class GameBoard extends AppCompatActivity {
 
         prevSelectedTile = -1;    //reset value on prevselectedtile
     }
+    //There is not a prevSelect tile
     else{
-        if(getPieceIDAt(selectedTile)>=0 && pieces[getPieceIDAt(selectedTile)].color.equals(currentTurnColor)){             //Is this an non-empty tile that belongs to current player
+        //Is this an non-empty tile that belongs to current player
+        if(getPieceIDAt(selectedTile)>=0 && pieces[getPieceIDAt(selectedTile)].color.equals(currentTurnColor)){
             prevSelectedTile = selectedTile;                    //set this tile to previous selected tile
             tiles[selectedTile].button.setBackgroundColor(getResources().getColor(R.color.selectedTile));             //Highlight tile
 
