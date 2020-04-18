@@ -1,9 +1,13 @@
 package com.example.adam.schackapp;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,6 +26,8 @@ public class GameBoard extends AppCompatActivity {
     Tiles[] tiles;
     Piece[] pieces;
     int[] moves;
+    int WHITE_TILE;
+    int BLACK_TILE;
     String currentTurnColor = "white";          //indicates whos turn it is, default white
     int prevSelectedTile = -1;                  //shows the index of previously selected tiles, neg number for none selected
 
@@ -32,13 +38,25 @@ public class GameBoard extends AppCompatActivity {
 
         tiles = new Tiles[amountOfTiles];
 
+
+        //Remove the navBar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+        //Here we assert the resource used for the black and white tile
+        BLACK_TILE = R.drawable.black_tile2;
+        WHITE_TILE = R.drawable.white_tile2;
+
         //Get display width
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = displayMetrics.widthPixels;
+        int tileWidth = displayMetrics.widthPixels - (displayMetrics.widthPixels/10);
+        int rowWidth = displayMetrics.widthPixels;
+
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.linearlay);
         layout.setOrientation(LinearLayout.VERTICAL);  //Can also be done in xml by android:orientation="vertical"
+
 
         // Create all the tiles
         for(int row=0;row<amountOfBoards*8;row++){
@@ -53,19 +71,20 @@ public class GameBoard extends AppCompatActivity {
         //adding buttons and connecting them to tiles
         for (int i = 0; i < 8*amountOfBoards; i++) {
             LinearLayout row = new LinearLayout(this);
-            row.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            row.setLayoutParams(new LinearLayout.LayoutParams(rowWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
 
+            row.setGravity(Gravity.CENTER);
             for (int j = 0; j < 8; j++) {
                 final int currTile = (i *8) + j;    //the tile index
                 ImageButton btnTag = new ImageButton(this);
 
                 //setting the measurements for each tile
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width/8, width/8);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(tileWidth/8, tileWidth/8);
                 btnTag.setLayoutParams(params);
 
                 //applying textures to the tiles
-                if(tiles[currTile].color.equals("white")){btnTag.setBackground(getResources().getDrawable(R.drawable.ic_launcher_foreground));}
-                else if(tiles[currTile].color.equals("black")){btnTag.setBackground(getResources().getDrawable(R.drawable.ic_launcher_background));}
+                if(tiles[currTile].color.equals("white")){btnTag.setBackground(getResources().getDrawable(WHITE_TILE));}
+                else if(tiles[currTile].color.equals("black")){btnTag.setBackground(getResources().getDrawable(BLACK_TILE));}
 
                 //connecting button to tile
                 tiles[currTile].button = btnTag;
@@ -87,7 +106,7 @@ public class GameBoard extends AppCompatActivity {
             //Check if row should be empty row (to separate boards)
             if(i%8 == 0){
                 LinearLayout emptyrow = new LinearLayout(this);
-                emptyrow.setLayoutParams(new LinearLayout.LayoutParams(width/8, width/8));
+                emptyrow.setLayoutParams(new LinearLayout.LayoutParams(tileWidth/8, tileWidth/8));
                 layout.addView(emptyrow);
             }
 
@@ -113,8 +132,8 @@ public class GameBoard extends AppCompatActivity {
     * */
     private void onPressedTile(int selectedTile){
     if(prevSelectedTile >= 0){                          //Is there a piece selected already?
-        if(tiles[prevSelectedTile].color.equals("white")){tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(R.drawable.ic_launcher_foreground));}         //reset color on tile
-        else{tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(R.drawable.ic_launcher_background));}          //reset color on tile
+        if(tiles[prevSelectedTile].color.equals("white")){tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(WHITE_TILE));}         //reset color on tile
+        else{tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(BLACK_TILE));}          //reset color on tile
 
         //check if a possible move is clicked and then proceed to update game values for that move
         for (int move : moves){
@@ -133,8 +152,8 @@ public class GameBoard extends AppCompatActivity {
 
         //Reset textures for all possible moves
         for(int move : moves){
-            if(tiles[move].color.equals("white")){tiles[move].button.setBackground(getResources().getDrawable(R.drawable.ic_launcher_foreground));}
-            else if(tiles[move].color.equals("black")){tiles[move].button.setBackground(getResources().getDrawable(R.drawable.ic_launcher_background));}
+            if(tiles[move].color.equals("white")){tiles[move].button.setBackground(getResources().getDrawable(WHITE_TILE));}
+            else if(tiles[move].color.equals("black")){tiles[move].button.setBackground(getResources().getDrawable(BLACK_TILE));}
         }
 
         prevSelectedTile = -1;    //reset value on prevselectedtile
@@ -229,7 +248,7 @@ public class GameBoard extends AppCompatActivity {
      * */
     private void updatePieces() {
         //TODO hitta ett snyggt sätt att kombinera piece.color och piece.type och sedan hämta kombinationen istället för att ha 1000 cases
-        //TODO gör det här ordentligt någon gång istället för att reset:a alla tiles
+        //TODO gör det här ordentligt någon gång istället för att reset:a ALLA tiles
 
         //clearing all tiles
         for (Tiles tile : tiles){

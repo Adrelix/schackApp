@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="highlightedTile">#24b1f7</color>
     <color name="selectedTile">#ff00c3</color>
+    <color name="black">#0a0809</color>
 </resources>
