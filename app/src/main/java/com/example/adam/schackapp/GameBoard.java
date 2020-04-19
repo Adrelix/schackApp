@@ -56,7 +56,7 @@ public class GameBoard extends AppCompatActivity {
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.linearlay);
         layout.setOrientation(LinearLayout.VERTICAL);  //Can also be done in xml by android:orientation="vertical"
-
+        layout.setPadding(0,0,0, tileWidth/8);
 
         // Create all the tiles
         for(int row=0;row<amountOfBoards*8;row++){
