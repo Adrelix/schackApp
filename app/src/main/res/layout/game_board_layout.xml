@@ -36,15 +36,67 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/navbarBackground"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
+                    android:scaleType="fitXY"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/navbar_background"
-                    android:scaleType="fitXY"/>
+                    app:srcCompat="@drawable/navbar_background" />
+
+                <ImageView
+                    android:id="@+id/playerPicture"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/navbarBackground"
+                    app:layout_constraintEnd_toEndOf="@id/navbarBackground"
+                    app:layout_constraintHorizontal_bias="0.25"
+                    app:layout_constraintStart_toStartOf="@+id/navbarBackground"
+                    app:layout_constraintTop_toTopOf="@+id/navbarBackground"
+                    app:srcCompat="@drawable/empty_profile_image" />
+
+                <TextView
+                    android:id="@+id/playerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="PlayerName"
+                    android:textColor="?attr/colorBackgroundFloating"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/playerPicture"
+                    app:layout_constraintTop_toTopOf="@+id/playerPicture"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/playerQuote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text='"Ingen minns en fegis"'
+                    android:textColor="?attr/colorBackgroundFloating"
+                    app:layout_constraintStart_toEndOf="@+id/playerPicture"
+                    app:layout_constraintTop_toBottomOf="@+id/playerName" />
+
+                <ImageView
+                    android:id="@+id/menyButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/playerPicture"
+                    app:layout_constraintStart_toStartOf="@+id/navbarBackground"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/hamburger_white" />
             </android.support.constraint.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
