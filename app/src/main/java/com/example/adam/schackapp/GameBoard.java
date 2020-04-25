@@ -1,8 +1,5 @@
 package com.example.adam.schackapp;
 
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ScaleDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,12 +9,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-
-import com.example.adam.schackapp.Piece;
-import com.example.adam.schackapp.Tiles;
-
-import java.util.Collections;
 
 
 public class GameBoard extends AppCompatActivity {
