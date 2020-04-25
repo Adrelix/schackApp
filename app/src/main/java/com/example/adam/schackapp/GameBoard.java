@@ -25,7 +25,7 @@ public class GameBoard extends AppCompatActivity {
     private int amountOfTiles = amountOfBoards * 64;
     Tiles[] tiles;
     Piece[] pieces;
-    int[] moves;
+    Integer[] moves;        //Blåa rutorna som highlightas, dvs möjliga dragen
     int WHITE_TILE;
     int BLACK_TILE;
     String currentTurnColor = "white";          //indicates whos turn it is, default white
@@ -151,7 +151,7 @@ public class GameBoard extends AppCompatActivity {
 
 
         //Reset textures for all possible moves
-        for(int move : moves){
+        for(Integer move : moves){
             if(tiles[move].color.equals("white")){tiles[move].button.setBackground(getResources().getDrawable(WHITE_TILE));}
             else if(tiles[move].color.equals("black")){tiles[move].button.setBackground(getResources().getDrawable(BLACK_TILE));}
         }
@@ -165,9 +165,9 @@ public class GameBoard extends AppCompatActivity {
             prevSelectedTile = selectedTile;                    //set this tile to previous selected tile
             tiles[selectedTile].button.setBackgroundColor(getResources().getColor(R.color.selectedTile));             //Highlight tile
 
-            moves = pieces[getPieceIDAt(selectedTile)].getMoves();
+            moves = pieces[getPieceIDAt(selectedTile)].getMoves(pieces);
 
-            for(int move : moves){
+            for(Integer move : moves){
                 tiles[move].button.setBackgroundColor(getResources().getColor(R.color.highlightedTile));         //Highlight possible moves
             }
         }
