@@ -156,7 +156,7 @@ public class GameBoard extends AppCompatActivity {
             prevSelectedTile = selectedTile;                    //set this tile to previous selected tile
             tiles[selectedTile].button.setBackgroundColor(getResources().getColor(R.color.selectedTile));             //Highlight tile
 
-            moves = pieces[getPieceIDAt(selectedTile)].getMoves(pieces);
+            moves = pieces[getPieceIDAt(selectedTile)].getMoves(pieces, amountOfTiles);
 
             for(Integer move : moves){
                 tiles[move].button.setBackgroundColor(getResources().getColor(R.color.highlightedTile));         //Highlight possible moves
@@ -191,14 +191,14 @@ public class GameBoard extends AppCompatActivity {
     private void initializeBoardPieces(){
         //placing pieces at starting positions
         pieces = new Piece[32];
-        pieces[0] = new Piece("torn", "white", 0);
-        pieces[1] = new Piece("hast", "white", 1);
-        pieces[2] = new Piece("lopare", "white", 2);
-        pieces[3] = new Piece("drottning", "white", 3);
-        pieces[4] = new Piece("kung", "white", 4);
-        pieces[5] = new Piece("lopare", "white", 5);
-        pieces[6] = new Piece("hast", "white", 6);
-        pieces[7] = new Piece("torn", "white", 7);
+        pieces[0] = new Piece("torn", "white", 0+72);
+        pieces[1] = new Piece("hast", "white", 1+72);
+        pieces[2] = new Piece("lopare", "white", 2+72);
+        pieces[3] = new Piece("drottning", "white", 3+72);
+        pieces[4] = new Piece("kung", "white", 4+72);
+        pieces[5] = new Piece("lopare", "white", 5+72);
+        pieces[6] = new Piece("hast", "white", 6+72);
+        pieces[7] = new Piece("torn", "white", 7+72+8);
         pieces[8] = new Piece("bonde", "white", 8);
         pieces[9] = new Piece("bonde", "white", 9);
         pieces[10] = new Piece("bonde", "white", 10);
