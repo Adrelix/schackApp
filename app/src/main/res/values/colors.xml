@@ -6,4 +6,5 @@
     <color name="highlightedTile">#24b1f7</color>
     <color name="selectedTile">#ff00c3</color>
     <color name="black">#0a0809</color>
+    <color name="transparent">#00ffffff</color>
 </resources>

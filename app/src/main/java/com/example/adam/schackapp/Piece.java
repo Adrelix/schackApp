@@ -22,12 +22,18 @@ public class Piece {
         * */
         int[] allPiecesPosition = new int[boardSize];
 
-        for (int i : allPiecesPosition){
-            i=0;
+        for (int i = 0; i < allPiecesPosition.length; i++){     //set all position start values to 0, not sure how necessary it is but it's a catch for null errors
+            allPiecesPosition[i] = 0;
         }
         for (Piece piece : pieces) {
-                if(piece.color==color){allPiecesPosition[piece.currentPosition] = 1; }//check if piece is friend or foe and sets value
-                else{ allPiecesPosition[piece.currentPosition] = 2;}
+            if(piece.currentPosition>0) {       //make sure piece still on the board
+                if (piece.color == color) {
+                    allPiecesPosition[piece.currentPosition] = 1;
+                }//check if piece is friend or foe and sets value
+                else {
+                    allPiecesPosition[piece.currentPosition] = 2;
+                }
+            }
         }
 
 
@@ -35,29 +41,36 @@ public class Piece {
 
     switch (type){                  //switch dependent on what kind of unit is selected
         case "torn":
-            for(int positionToCheck = currentPosition -1; positionToCheck >= currentPosition - currentPosition%8; positionToCheck--){              //left
-               if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
-               if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = -10000;}
+
+            //left
+            for(int positionToCheck = currentPosition -1; positionToCheck >= currentPosition - currentPosition%8; positionToCheck--){               //check edges of board and loops in right direction
+               if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}                                  //Check if tile is empty or enemy and if so adds to possible moves
+               if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = -10000;} //checks if the loop should continue (if there are more tiles in same direction worth checking)
             }
-            for(int positionToCheck = currentPosition +1; positionToCheck < currentPosition + 8-currentPosition%8; positionToCheck++){              //right
+            //right
+            for(int positionToCheck = currentPosition +1; positionToCheck < currentPosition + 8-currentPosition%8; positionToCheck++){
                 if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
-                if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = 10000;}  //update the value of i dependet on checkcollision value, if it's a friend or foe it breaks the loop
+                if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = 10000;}
             }
-            for(int positionToCheck = currentPosition-8; positionToCheck >= currentPosition - currentPosition%64; positionToCheck-=8){              //up y-axis
+            //up y-axis
+            for(int positionToCheck = currentPosition-8; positionToCheck >= currentPosition - currentPosition%64; positionToCheck-=8){
                 if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
-                if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = -10000;}  //update the value of i dependet on checkcollision value, if it's a friend or foe it breaks the loop
+                if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = -10000;}
             }
-            for(int positionToCheck = currentPosition+8; positionToCheck < currentPosition + 64-currentPosition%64; positionToCheck+=8){              //ner y-axis
+            //ner y-axis
+            for(int positionToCheck = currentPosition+8; positionToCheck < currentPosition + 64-currentPosition%64; positionToCheck+=8){
                 if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
-                if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = 10000;}   //update the value of i dependet on checkcollision value, if it's a friend or foe it breaks the loop
+                if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = 10000;}
             }
-            for(int positionToCheck = currentPosition+64; positionToCheck < boardSize; positionToCheck+=64){                                          //upp z-led
+            //upp z-led
+            for(int positionToCheck = currentPosition+64; positionToCheck < boardSize; positionToCheck+=64){
                 if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
-                if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = 10000;}  //update the value of i dependet on checkcollision value, if it's a friend or foe it breaks the loop
+                if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = 10000;}
             }
-            for(int positionToCheck = currentPosition-64; positionToCheck >= 0; positionToCheck-=64){                                          //ner z-led
+            //ner z-led
+            for(int positionToCheck = currentPosition-64; positionToCheck >= 0; positionToCheck-=64){
                 if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
-                if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = -10000;}  //update the value of i dependet on checkcollision value, if it's a friend or foe it breaks the loop
+                if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = -10000;}
             }
 
         case "bond":
