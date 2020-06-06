@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">shackApp</string>
+    <string name="login">Login</string>
+    <string name="login_name">Profile name</string>
+    <string name="email">Email</string>
+    <string name="why_email">We only ask for email for account security reasons. We will never send you spam, offers, etc.</string>
+    <string name="login_password">Password</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="login_register">Register \nnew profile</string>
+
+
 </resources>

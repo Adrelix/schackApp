@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "388073990183",
+    "firebase_url": "https://schack-3d-3f977.firebaseio.com",
+    "project_id": "schack-3d-3f977",
+    "storage_bucket": "schack-3d-3f977.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388073990183:android:b3f1853c2501069c2e0602",
+        "android_client_info": {
+          "package_name": "com.example.adam.shackapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "388073990183-9uvnpm02uklp9b7nvoad59h94aqs8q22.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.adam.shackapp",
+            "certificate_hash": "d18e22111376d38d02ef5e8f40a873a7e2279b5a"
+          }
+        },
+        {
+          "client_id": "388073990183-ubfbqhq4n54654r7gn0e11aguk8nl4b6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw1DALUBk2nb2TqX6uK2VYRxKjgTZSRrk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "388073990183-ubfbqhq4n54654r7gn0e11aguk8nl4b6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

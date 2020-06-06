@@ -44,10 +44,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        //Remove the navBar
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
-
 
 
         //Takes in the list of desired attributes, sends them to an adapter and then puts them in a list, creating the current games list
@@ -56,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         list.setAdapter(adapter);                                                                           //Adds all loaded in gamelistitems
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {                                 //what happens after an item is pressed
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, GameBoard.class);
                 intent.putExtra("playerName", playertitle[position]);
 

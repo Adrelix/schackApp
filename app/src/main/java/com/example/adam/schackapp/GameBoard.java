@@ -60,10 +60,6 @@ public class GameBoard extends AppCompatActivity {
             getWindow().setNavigationBarColor(getResources().getColor(R.color.black));
         }
 
-        //Remove the navBar
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
-
 
 
         //Load information from intent
