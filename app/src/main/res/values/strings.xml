@@ -7,6 +7,11 @@
     <string name="login_password">Password</string>
     <string name="repeat_password">Repeat password</string>
     <string name="login_register">Register \nnew profile</string>
+    <string name="new_game">New Game</string>
+    <string name="opponent">Opponent:</string>
+    <string name="type_name">Type name...</string>
+    <string name="create_screen_tip">Big brain players do big brain moves. If you find yourself doing small brain moves, odds are you are a small brain player.</string>
+    <string name="create">Create</string>
 
 
 </resources>

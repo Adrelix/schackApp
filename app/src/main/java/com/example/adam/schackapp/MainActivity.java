@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, GameBoard.class);
                 intent.putExtra("playerName", playertitle[position]);
 
-                    startGame(view, intent);
+                    startGame(view, playertitle[position]);
             }
         });
 
@@ -64,9 +64,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+public void newGame(View view){
+    Intent intent = new Intent(MainActivity.this, NewGameSettings.class);
+    startActivity(intent);
 
+}
 
-    public void startGame(View view, Intent intent){
+    public void startGame(View view, String opponent){
+        Intent intent = new Intent(MainActivity.this, GameBoard.class);
+        intent.putExtra("playerName", opponent);
         startActivity(intent);
     }
 }

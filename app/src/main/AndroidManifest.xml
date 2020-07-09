@@ -22,6 +22,10 @@
             android:name=".RegisterNewProfile"
             android:noHistory="true"
             />
+        <activity
+            android:name=".NewGameSettings"
+            android:noHistory="true"
+            />
     </application>
 
 </manifest>

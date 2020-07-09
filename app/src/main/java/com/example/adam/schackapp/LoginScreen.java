@@ -34,6 +34,9 @@ public class LoginScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen_layout);
 
+        Intent intent = new Intent(LoginScreen.this, MainActivity.class);
+        startActivity(intent);
+
         databaseProfiles = FirebaseDatabase.getInstance().getReference("profiles");
         mAuth = FirebaseAuth.getInstance();
 
