@@ -15,7 +15,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -99,7 +98,7 @@ public class RegisterNewProfile extends AppCompatActivity {
 
         //Old method to create profile, used the database and not the auth function of firebase, still kinda useful as it saves username
         createdID = databaseProfiles.push().getKey();           //Get next item ID
-        Profile newProfile = new Profile(createdID, attemptedName, attemptedPw, attemptedEmail);    //Create profile object
+        ProfileObject newProfile = new ProfileObject(createdID, attemptedName, attemptedPw, attemptedEmail);    //Create profile object
         databaseProfiles.child(createdID).setValue(newProfile);                                     //Add Profile to database
 
 

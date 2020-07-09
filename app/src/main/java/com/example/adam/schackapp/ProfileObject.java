@@ -1,16 +1,16 @@
 package com.example.adam.schackapp;
 
-public class Profile {
+public class ProfileObject {
     String profileID;
     String name;
     String password;
     String email;
 
-    public Profile(){
+    public ProfileObject(){
 
     }
 
-    public Profile(String profileID, String name, String password, String email) {
+    public ProfileObject(String profileID, String name, String password, String email) {
         this.profileID = profileID;
         this.name = name;
         this.password = password;
