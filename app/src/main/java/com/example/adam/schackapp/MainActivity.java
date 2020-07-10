@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
      * */
     public void startGame(View view, GameObject game){
         Intent intent = new Intent(MainActivity.this, GameBoard.class);
-        intent.putExtra("opponentName", game);
+        intent.putExtra("gameToLoad", game);
         startActivity(intent);
     }
 

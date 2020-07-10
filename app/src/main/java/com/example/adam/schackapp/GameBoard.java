@@ -38,8 +38,17 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class GameBoard extends AppCompatActivity {
 
-    //Custom info
+    //Game info
     String opponentName;
+    String gameID;
+    int gameStatus;
+    String lastMoveDate;
+    String lastPiecePosition;
+    String piecePosition;
+    int roundNumb;
+    String startDate;
+
+    //Custom info
     int WHITE_TILE;
     int BLACK_TILE;
 
@@ -71,10 +80,13 @@ public class GameBoard extends AppCompatActivity {
 
 
         //Load information from intent
-        Bundle intentBundle = getIntent().getExtras();
-        opponentName = intentBundle.getString("opponentName");
+        GameObject game = (GameObject) getIntent().getSerializableExtra("gameToLoad");
+        loadInGame(game);
+
+
+
         TextView opponentNameView = findViewById(R.id.playerName);
-        opponentNameView.setText(opponentName);
+        opponentNameView.setText(game.getPlayerOne());
 
 
         //Load information from database
@@ -346,6 +358,15 @@ public class GameBoard extends AppCompatActivity {
     }
 
 
+    private void loadInGame(GameObject game){
+        
+
+
+    }
+
+    private void pushGame(){
+
+    }
 
 }
 

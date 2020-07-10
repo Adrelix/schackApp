@@ -1,6 +1,8 @@
 package com.example.adam.schackapp;
 
 
+import java.io.Serializable;
+
 /*
  * Database plan:
  *
@@ -12,7 +14,7 @@ package com.example.adam.schackapp;
  *   piecePositions: should be some stored information about all pieces and there positions, not sure if it can be implemented as the whole Pieces structure or if a clever string should be made
  *
  * */
-public class GameObject {
+public class GameObject implements Serializable {
     private String gameID;
     private String playerOne;
     private String playerTwo;
@@ -21,17 +23,17 @@ public class GameObject {
     private String lastPiecePositions;
     private String piecePositions;
     private int roundNumb;
-    private String startdate;
+    private String startDate;
     private String lastMoveDate;
 
     public GameObject(){
     }
-    public GameObject(String gameID, String playerOne, String playerTwo, String startdate, int amountOfBoards){
+    public GameObject(String gameID, String playerOne, String playerTwo, String startDate, int amountOfBoards){
         this.gameID = gameID;
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
-        this.startdate = startdate;
-        this.lastMoveDate = startdate;
+        this.startDate = startDate;
+        this.lastMoveDate = startDate;
         this.amountOfBoards = amountOfBoards;
         this.piecePositions = generateStartPositions(amountOfBoards);
         this.lastPiecePositions = this.piecePositions;
@@ -104,7 +106,7 @@ public class GameObject {
     }
 
     public String getStartdate() {
-        return startdate;
+        return startDate;
     }
 
     public String getLastMoveDate() {
