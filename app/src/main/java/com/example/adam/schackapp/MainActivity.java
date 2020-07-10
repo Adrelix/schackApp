@@ -19,35 +19,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
-    String[] playertitle ={                                           //sample users here, should be replace with data fetched from database
-            "Adrelix","GajicNation",                                //the view that this is represented in should also be changed from a listview
-            "Alex189650","Hjerpan",                                 //to probably trying to add listitems directly to the linear layout to make the logo and
-            "Meow Meow", "Deadpool",                                //options bar scroll with the list
-            "Midas","BowGirl69",
-            "Thanos", "Mumbo Jumbo",
-    };
-
-    String[] subtitle ={
-            "Your turn!","Waiting for their move...",
-            "Your turn!","Waiting for their move...",
-            "Waiting for their move...", "Your turn!","Waiting for their move...",
-            "Your turn!","Waiting for their move...",
-            "Waiting for their move...",
-    };
-    Integer[] imgid={
-            R.drawable.empty_profile_image,R.drawable.empty_profile_image,
-            R.drawable.empty_profile_image,R.drawable.empty_profile_image,
-            R.drawable.empty_profile_image, R.drawable.empty_profile_image,R.drawable.empty_profile_image,
-            R.drawable.empty_profile_image,R.drawable.empty_profile_image,
-            R.drawable.empty_profile_image,
-    };
-
+    ProfileObject profile;
     String playerName;
     String playerQuote;
-    String[] playerTitle;
-    String[] subMessage;
-    Integer[] imgArray;
+
 
     DatabaseReference databaseProfiles;
     DatabaseReference databaseGames;
@@ -67,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
         databaseProfiles = FirebaseDatabase.getInstance().getReference("profiles");
         databaseGames = FirebaseDatabase.getInstance().getReference("games");
         playerName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
+
+        profile = (ProfileObject) getIntent().getSerializableExtra("profileToLoad");
+        playerQuote = profile.getQuote();
+
 
         getGames();
 
@@ -172,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
      * */
     public void newGame(View view){
         Intent intent = new Intent(MainActivity.this, NewGameSettings.class);
-        intent.putExtra("playerName", playerName);
+        intent.putExtra("profileToLoad", profile);
         startActivity(intent);
 
     }

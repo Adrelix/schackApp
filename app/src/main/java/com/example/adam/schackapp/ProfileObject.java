@@ -1,10 +1,13 @@
 package com.example.adam.schackapp;
 
-public class ProfileObject {
+import java.io.Serializable;
+
+public class ProfileObject implements Serializable {
     String profileID;
     String name;
     String password;
     String email;
+    String quote = "Jag är inte cool nog för att ha fått min quote fixad";
 
     public ProfileObject(){
 
@@ -32,4 +35,13 @@ public class ProfileObject {
     public String getEmail() {
         return email;
     }
+
+    public String getQuote() {
+        return quote;
+    }
+
+    public void setQuote(String quote) {
+        this.quote = quote;
+    }
+
 }

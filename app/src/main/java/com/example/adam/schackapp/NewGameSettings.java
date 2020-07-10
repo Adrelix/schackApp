@@ -23,6 +23,8 @@ public class NewGameSettings extends AppCompatActivity {
     private DatabaseReference databaseProfiles;
     private DatabaseReference databaseGames;
 
+    private ProfileObject profile;
+
     String playerName;
     String currentDate;
 
@@ -30,6 +32,9 @@ public class NewGameSettings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_game_settings_layout);
+
+
+        profile = (ProfileObject) getIntent().getSerializableExtra("profileToLoad");
 
         playerName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
@@ -60,17 +65,18 @@ public class NewGameSettings extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){                          //Check that the user exist in the database
-                    ProfileObject fetchedProfile = null;
+                    ProfileObject opponent = null;
                     for(DataSnapshot dbsnap : dataSnapshot.getChildren()){ //TODO atm it read through the whole list even tho it's a single element list, should be fixed
-                        fetchedProfile = dbsnap.getValue(ProfileObject.class);        //Assert the fetched data to a profile object
+                        opponent = dbsnap.getValue(ProfileObject.class);        //Assert the fetched data to a profile object
                     }
-                    Toast.makeText(NewGameSettings.this, "Found user: " + opponentName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewGameSettings.this, "Found user: " + opponent.getName(), Toast.LENGTH_SHORT).show();
 
                     //TODO Create game with both users
                     String createdID = databaseGames.push().getKey();           //Get next item ID
-                    GameObject newGame = new GameObject(createdID, playerName, opponentName, currentDate, 3);
+                    GameObject newGame = new GameObject(createdID, playerName, opponentName, profile.getQuote(),
+                            opponent.getQuote(), currentDate, 3);
                     databaseGames.child(createdID).setValue(newGame);                                     //Add Profile to database
-
+                    finish();
 
                 }
                 else{       //If user couldn't be found

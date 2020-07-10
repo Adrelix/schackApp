@@ -25,13 +25,17 @@ public class GameObject implements Serializable {
     private int roundNumb;
     private String startDate;
     private String lastMoveDate;
+    private String playerOneQuote;
+    private String playerTwoQuote;
 
     public GameObject(){
     }
-    public GameObject(String gameID, String playerOne, String playerTwo, String startDate, int amountOfBoards){
+    public GameObject(String gameID, String playerOne, String playerTwo, String playerOneQuote, String playerTwoQuote, String startDate, int amountOfBoards){
         this.gameID = gameID;
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
+        this.playerOneQuote = playerOneQuote;
+        this.playerTwoQuote = playerTwoQuote;
         this.startDate = startDate;
         this.lastMoveDate = startDate;
         this.amountOfBoards = amountOfBoards;
@@ -83,6 +87,14 @@ public class GameObject implements Serializable {
 
     public String getPlayerTwo() {
         return playerTwo;
+    }
+
+    public String getPlayerOneQuote() {
+        return playerOneQuote;
+    }
+
+    public String getPlayerTwoQuote() {
+        return playerTwoQuote;
     }
 
     public int getGameStatus() {

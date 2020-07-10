@@ -48,6 +48,7 @@ public class GameBoard extends AppCompatActivity {
     String piecePosition;
     int roundNumb;
     String startDate;
+    String opponentQuote;
 
     //Custom info
     int WHITE_TILE;
@@ -185,50 +186,51 @@ public class GameBoard extends AppCompatActivity {
     *                                                                                               \ no -> do nothing
     * */
     private void onPressedTile(int selectedTile){
-    if(prevSelectedTile >= 0){                          //Is there a piece selected already?
-        if(tiles[prevSelectedTile].color.equals("white")){tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(WHITE_TILE));}         //reset color on tile
-        else{tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(BLACK_TILE));}          //reset color on tile
+        //Is there a piece selected already?
+        if(prevSelectedTile >= 0){
+            if(tiles[prevSelectedTile].color.equals("white")){tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(WHITE_TILE));}         //reset color on tile
+            else{tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(BLACK_TILE));}          //reset color on tile
 
-        //check if a possible move is clicked and then proceed to update game values for that move
-        for (int move : moves){
-            if(selectedTile == move){
-                if(getPieceIDAt(move) >= 0){                                //check if move is to an occupied tile
-                    pieces[getPieceIDAt(move)].currentPosition = -10;       //delete any piece that stands at tile moved to
+            //check if a possible move is clicked and then proceed to update game values for that move
+            for (int move : moves){
+                if(selectedTile == move){
+                    if(getPieceIDAt(move) >= 0){                                //check if move is to an occupied tile
+                        pieces[getPieceIDAt(move)].currentPosition = -10;       //delete any piece that stands at tile moved to
+                    }
+                    pieces[getPieceIDAt(prevSelectedTile)].currentPosition=move;        //Update the moved pieces currentPosition
+                    updatePieces();
+                    if(currentTurnColor.equals("white")){currentTurnColor="black";}
+                    else{currentTurnColor="white";}
                 }
-                pieces[getPieceIDAt(prevSelectedTile)].currentPosition=move;        //Update the moved pieces currentPosition
-                updatePieces();
-                if(currentTurnColor.equals("white")){currentTurnColor="black";}
-                else{currentTurnColor="white";}
             }
-        }
 
 
 
-        //Reset textures for all possible moves
-        for(Integer move : moves){
-            if(tiles[move].color.equals("white")){tiles[move].button.setBackground(getResources().getDrawable(WHITE_TILE));}
-            else if(tiles[move].color.equals("black")){tiles[move].button.setBackground(getResources().getDrawable(BLACK_TILE));}
-        }
-
-        prevSelectedTile = -1;    //reset value on prevselectedtile
-    }
-    //There is not a prevSelect tile
-    else{
-        //Is this an non-empty tile that belongs to current player
-        if(getPieceIDAt(selectedTile)>=0 && pieces[getPieceIDAt(selectedTile)].color.equals(currentTurnColor)){
-            prevSelectedTile = selectedTile;                    //set this tile to previous selected tile
-            tiles[selectedTile].button.setBackgroundColor(getResources().getColor(R.color.selectedTile));             //Highlight tile
-
-            moves = pieces[getPieceIDAt(selectedTile)].getMoves(pieces, amountOfTiles);
-
+            //Reset textures for all possible moves
             for(Integer move : moves){
-                tiles[move].button.setBackgroundColor(getResources().getColor(R.color.highlightedTile));         //Highlight possible moves
+                if(tiles[move].color.equals("white")){tiles[move].button.setBackground(getResources().getDrawable(WHITE_TILE));}
+                else if(tiles[move].color.equals("black")){tiles[move].button.setBackground(getResources().getDrawable(BLACK_TILE));}
+            }
+
+            prevSelectedTile = -1;    //reset value on prevselectedtile
+        }
+        //There is not a prevSelect tile
+        else{
+            //Is this an non-empty tile that belongs to current player
+            if(getPieceIDAt(selectedTile)>=0 && pieces[getPieceIDAt(selectedTile)].color.equals(currentTurnColor)){
+                prevSelectedTile = selectedTile;                    //set this tile to previous selected tile
+                tiles[selectedTile].button.setBackgroundColor(getResources().getColor(R.color.selectedTile));             //Highlight tile
+
+                moves = pieces[getPieceIDAt(selectedTile)].getMoves(pieces, amountOfTiles);
+
+                for(Integer move : moves){
+                    tiles[move].button.setBackgroundColor(getResources().getColor(R.color.highlightedTile));         //Highlight possible moves
+                }
+            }
+            else{
+                return;
             }
         }
-        else{
-            return;
-        }
-    }
 
     }
 
@@ -360,11 +362,24 @@ public class GameBoard extends AppCompatActivity {
 
 
     private void loadInGame(GameObject game){
+
+        //Load in names and quotes
         if(game.getPlayerOne().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())){
             opponentName = game.getPlayerTwo();
+            opponentQuote = game.getPlayerTwoQuote();
         }
         else {
             opponentName = game.getPlayerOne();
+            opponentQuote = game.getPlayerOneQuote();
+        }
+
+        //Set the quote
+        TextView quoteView = (TextView) findViewById(R.id.playerQuote);
+        quoteView.setText(opponentQuote);
+
+
+        for(int i = 0; i < amountOfTiles; i++){
+
         }
 
 

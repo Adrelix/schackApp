@@ -28,6 +28,7 @@ public class LoginScreen extends AppCompatActivity {
 
     DatabaseReference databaseProfiles;
     FirebaseAuth mAuth;
+    ProfileObject userProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,72 +59,52 @@ public class LoginScreen extends AppCompatActivity {
     * TODO fix fetch and control of data
     * */
     private void login(){
-        EditText writtenName = (EditText) findViewById(R.id.profile_name);
-        final String AttemptedEmail = writtenName.getText().toString().trim();
+        EditText writtenEmail = (EditText) findViewById(R.id.profile_name);
+        final String AttemptedEmail = writtenEmail.getText().toString().trim();
         EditText writtenPw = (EditText) findViewById(R.id.profile_password);
         final String AttemptedPassword = writtenPw.getText().toString().trim();
 
         if(!TextUtils.isEmpty(AttemptedEmail) && !TextUtils.isEmpty(AttemptedPassword)) {
+
+            //Use Firebase Authentication to sign in user
             mAuth.signInWithEmailAndPassword(AttemptedEmail, AttemptedPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         Toast.makeText(getApplicationContext(), "Welcome back\n" + FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+
+                        //Get profile information from database
+                        ValueEventListener valueEventListener = new ValueEventListener() {   //whenever a query with this valueEventListener is called it runs the sequence below
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.exists()){                          //Check that the user exist in the database
+                                    for(DataSnapshot dbsnap : dataSnapshot.getChildren()){ //TODO atm it read through the whole list even tho it's a single element list, should be fixed
+                                        userProfile = dbsnap.getValue(ProfileObject.class);        //Assert the fetched data to a profile object
+                                    }
+                                    //Send the information to the next activity
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    intent.putExtra("profileToLoad", userProfile);
+                                    startActivity(intent);
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {}
+
+                        };
+                        Query query = FirebaseDatabase.getInstance().getReference("profiles").orderByChild("email").equalTo(AttemptedEmail);      //Fetch all profiles that match the attemptedEmail
+                        query.addValueEventListener(valueEventListener);
+
+
+
+
+
                     } else {
                         Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             });
         }
-
-        /*Old method of login in*/
-
-     /*   if(!TextUtils.isEmpty(AttemptedName) && !TextUtils.isEmpty(AttemptedPassword)){
-
-            //whenever a query with this valueEventListener is called it runs the sequence below
-            ValueEventListener valueEventListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists()){                          //Check that the user exist in the database
-                        ProfileObject fetchedProfile = null;
-                        for(DataSnapshot dbsnap : dataSnapshot.getChildren()){ //TODO atm it read through the whole list even tho it's a single element list, should be fixed
-                            fetchedProfile = dbsnap.getValue(Profile.class);        //Assert the fetched data to a profile object
-                        }
-                        if(AttemptedPassword.equals(fetchedProfile.getPassword())){     //check if PW is correct
-                            Toast.makeText(LoginScreen.this, "Found user: " + AttemptedName, Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginScreen.this, MainActivity.class));
-                        }
-                        else {  //If profile exist but pw is wrong
-                            //TODO remember to remove full toast here
-                            Toast.makeText(LoginScreen.this, "Wrong password for user: " + AttemptedName + "\n Attempted pw: " + AttemptedPassword + "\n Actual pw: " + fetchedProfile.getPassword(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    else{       //If user couldn't be found
-                        Toast.makeText(LoginScreen.this, "Couldn't find user: " + AttemptedName, Toast.LENGTH_SHORT).show();
-                    }
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            };
-
-
-            Query query = FirebaseDatabase.getInstance().getReference("profiles").orderByChild("name").equalTo(AttemptedName);      //Fetch all profiles that match the attemptedname
-
-            query.addValueEventListener(valueEventListener);
-
-        }
-        else{
-            Toast.makeText(this, "Enter a name and pw", Toast.LENGTH_SHORT).show();
-        }
-
-                    */
-
     }
 
     //Register new user
