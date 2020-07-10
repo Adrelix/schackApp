@@ -24,6 +24,7 @@
             />
         <activity
             android:name=".NewGameSettings"
+            android:theme="@style/AppTheme.PopUp"
             android:noHistory="true"
             />
     </application>

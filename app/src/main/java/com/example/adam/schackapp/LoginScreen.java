@@ -34,9 +34,6 @@ public class LoginScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen_layout);
 
-        Intent intent = new Intent(LoginScreen.this, MainActivity.class);
-        startActivity(intent);
-
         databaseProfiles = FirebaseDatabase.getInstance().getReference("profiles");
         mAuth = FirebaseAuth.getInstance();
 
@@ -71,8 +68,8 @@ public class LoginScreen extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Welcome back\n" + AttemptedEmail, Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));             //go back to login page}
+                        Toast.makeText(getApplicationContext(), "Welcome back\n" + FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     } else {
                         Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }

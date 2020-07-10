@@ -64,7 +64,7 @@ public class GameBoard extends AppCompatActivity {
 
         //Load information from intent
         Bundle intentBundle = getIntent().getExtras();
-        opponentName = intentBundle.getString("playerName");
+        opponentName = intentBundle.getString("opponentName");
         TextView opponentNameView = findViewById(R.id.playerName);
         opponentNameView.setText(opponentName);
 

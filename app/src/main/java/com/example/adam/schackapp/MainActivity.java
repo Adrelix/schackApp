@@ -1,14 +1,13 @@
 package com.example.adam.schackapp;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.empty_profile_image,
     };
 
+    String playerName;
+    String playerQuote;
 
 
 
@@ -43,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
+        playerName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
         //Takes in the list of desired attributes, sends them to an adapter and then puts them in a list, creating the current games list
         GameItemListAdapter adapter=new GameItemListAdapter(this, playertitle, subtitle, imgid);
@@ -53,9 +53,6 @@ public class MainActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {                                 //what happens after an item is pressed
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, GameBoard.class);
-                intent.putExtra("playerName", playertitle[position]);
-
                     startGame(view, playertitle[position]);
             }
         });
@@ -66,13 +63,14 @@ public class MainActivity extends AppCompatActivity {
 
 public void newGame(View view){
     Intent intent = new Intent(MainActivity.this, NewGameSettings.class);
+    intent.putExtra("playerName", playerName);
     startActivity(intent);
 
 }
 
     public void startGame(View view, String opponent){
         Intent intent = new Intent(MainActivity.this, GameBoard.class);
-        intent.putExtra("playerName", opponent);
+        intent.putExtra("opponentName", opponent);
         startActivity(intent);
     }
 }
