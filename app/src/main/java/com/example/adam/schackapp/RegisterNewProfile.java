@@ -99,10 +99,7 @@ public class RegisterNewProfile extends AppCompatActivity {
         }
 
 
-        //Old method to create profile, used the database and not the auth function of firebase, still kinda useful as it saves username
-        createdID = databaseProfiles.push().getKey();           //Get next item ID
-        ProfileObject newProfile = new ProfileObject(createdID, attemptedName, attemptedPw, attemptedEmail);    //Create profile object
-        databaseProfiles.child(createdID).setValue(newProfile);                                     //Add Profile to database
+
 
 
         //The more advanced built in firebase authentication
@@ -122,6 +119,14 @@ public class RegisterNewProfile extends AppCompatActivity {
                                     }
                                 }
                             });
+
+
+                    //Old method to create profile, used the database and not the auth function of firebase, still kinda useful as it saves username
+                    createdID = databaseProfiles.push().getKey();           //Get next item ID
+                    ProfileObject newProfile = new ProfileObject(createdID, attemptedName, attemptedPw, attemptedEmail);    //Create profile object
+                    databaseProfiles.child(createdID).setValue(newProfile);                                     //Add Profile to database
+
+
                     Toast.makeText(getApplicationContext(), "User registration successful", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), LoginScreen.class));             //go back to login page}
                 }

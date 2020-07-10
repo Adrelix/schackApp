@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 
 
@@ -49,6 +52,11 @@ public class GameBoard extends AppCompatActivity {
     String currentTurnColor = "white";          //indicates whos turn it is, default white
     int prevSelectedTile = -1;                  //shows the index of previously selected tiles, neg number for none selected
 
+
+    DatabaseReference databaseProfiles;
+    DatabaseReference databaseGames;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +75,12 @@ public class GameBoard extends AppCompatActivity {
         opponentName = intentBundle.getString("opponentName");
         TextView opponentNameView = findViewById(R.id.playerName);
         opponentNameView.setText(opponentName);
+
+
+        //Load information from database
+        databaseProfiles = FirebaseDatabase.getInstance().getReference("profiles");
+        databaseGames = FirebaseDatabase.getInstance().getReference("games");
+
 
 
         tiles = new Tiles[amountOfTiles];
@@ -330,6 +344,8 @@ public class GameBoard extends AppCompatActivity {
         }
 
     }
+
+
 
 }
 
