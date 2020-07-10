@@ -69,6 +69,8 @@ public class NewGameSettings extends AppCompatActivity {
                     //TODO Create game with both users
                     String createdID = databaseGames.push().getKey();           //Get next item ID
                     GameObject newGame = new GameObject(createdID, playerName, opponentName, currentDate, 3);
+                    databaseGames.child(createdID).setValue(newGame);                                     //Add Profile to database
+
 
                 }
                 else{       //If user couldn't be found
