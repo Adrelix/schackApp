@@ -18,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 
 
 
@@ -58,7 +60,7 @@ public class GameBoard extends AppCompatActivity {
     private int amountOfBoards = 3;
     private int amountOfTiles = amountOfBoards * 64;
     Tiles[] tiles;
-    Piece[] pieces;
+    ArrayList<Piece> pieces;
     Integer[] moves;        //Blåa rutorna som highlightas, dvs möjliga dragen
     String currentTurnColor = "white";          //indicates whos turn it is, default white
     int prevSelectedTile = -1;                  //shows the index of previously selected tiles, neg number for none selected
@@ -170,7 +172,6 @@ public class GameBoard extends AppCompatActivity {
         }
 
         //Activating the pieces at their start positions
-        initializeBoardPieces();
         updatePieces();
 
 
@@ -195,9 +196,9 @@ public class GameBoard extends AppCompatActivity {
             for (int move : moves){
                 if(selectedTile == move){
                     if(getPieceIDAt(move) >= 0){                                //check if move is to an occupied tile
-                        pieces[getPieceIDAt(move)].currentPosition = -10;       //delete any piece that stands at tile moved to
+                        pieces.get(getPieceIDAt(move)).currentPosition = -10;       //delete any piece that stands at tile moved to
                     }
-                    pieces[getPieceIDAt(prevSelectedTile)].currentPosition=move;        //Update the moved pieces currentPosition
+                    pieces.get(getPieceIDAt(prevSelectedTile)).currentPosition=move;        //Update the moved pieces currentPosition
                     updatePieces();
                     if(currentTurnColor.equals("white")){currentTurnColor="black";}
                     else{currentTurnColor="white";}
@@ -217,11 +218,11 @@ public class GameBoard extends AppCompatActivity {
         //There is not a prevSelect tile
         else{
             //Is this an non-empty tile that belongs to current player
-            if(getPieceIDAt(selectedTile)>=0 && pieces[getPieceIDAt(selectedTile)].color.equals(currentTurnColor)){
+            if(getPieceIDAt(selectedTile)>=0 && pieces.get(getPieceIDAt(selectedTile)).color.equals(currentTurnColor)){
                 prevSelectedTile = selectedTile;                    //set this tile to previous selected tile
                 tiles[selectedTile].button.setBackgroundColor(getResources().getColor(R.color.selectedTile));             //Highlight tile
 
-                moves = pieces[getPieceIDAt(selectedTile)].getMoves(pieces, amountOfTiles);
+                moves = pieces.get(getPieceIDAt(selectedTile)).getMoves(pieces, amountOfTiles);
 
                 for(Integer move : moves){
                     tiles[move].button.setBackgroundColor(getResources().getColor(R.color.highlightedTile));         //Highlight possible moves
@@ -240,62 +241,13 @@ public class GameBoard extends AppCompatActivity {
     * @param tileID on board
     * */
     private int getPieceIDAt(int tileID){
-        for (int i = 0; i < pieces.length; i++){
-            if(pieces[i].currentPosition == tileID){
+        for (int i = 0; i < pieces.size(); i++){
+            if(pieces.get(i).currentPosition == tileID){
                 return i;
             }
         }
 
         return -1;
-    }
-
-
-    /**
-    * Activate the starting positions and create each piece
-    * */
-    private void initializeBoardPieces(){
-        //placing pieces at starting positions
-        pieces = new Piece[32];
-        pieces[0] = new Piece("torn", "white", 0+72);
-        pieces[1] = new Piece("hast", "white", 1+72);
-        pieces[2] = new Piece("lopare", "white", 2+72);
-        pieces[3] = new Piece("drottning", "white", 3+72);
-        pieces[4] = new Piece("kung", "white", 4+72);
-        pieces[5] = new Piece("lopare", "white", 5+72);
-        pieces[6] = new Piece("hast", "white", 6+72);
-        pieces[7] = new Piece("torn", "white", 7+72+8);
-        pieces[8] = new Piece("bonde", "white", 8);
-        pieces[9] = new Piece("bonde", "white", 9);
-        pieces[10] = new Piece("bonde", "white", 10);
-        pieces[11] = new Piece("bonde", "white", 11);
-        pieces[12] = new Piece("bonde", "white", 12);
-        pieces[13] = new Piece("bonde", "white", 13);
-        pieces[14] = new Piece("bonde", "white", 14);
-        pieces[15] = new Piece("bonde", "white", 15);
-        pieces[16] = new Piece("torn", "black", amountOfTiles-1);
-        pieces[17] = new Piece("hast", "black", amountOfTiles-2);
-        pieces[18] = new Piece("lopare", "black", amountOfTiles-3);
-        pieces[20] = new Piece("kung", "black", amountOfTiles-4);
-        pieces[19] = new Piece("drottning", "black", amountOfTiles-5);
-        pieces[21] = new Piece("lopare", "black", amountOfTiles-6);
-        pieces[22] = new Piece("hast", "black", amountOfTiles-7);
-        pieces[23] = new Piece("torn", "black", amountOfTiles-8);
-        pieces[24] = new Piece("bonde", "black", amountOfTiles-9);
-        pieces[25] = new Piece("bonde", "black", amountOfTiles-10);
-        pieces[26] = new Piece("bonde", "black", amountOfTiles-11);
-        pieces[27] = new Piece("bonde", "black", amountOfTiles-12);
-        pieces[28] = new Piece("bonde", "black", amountOfTiles-13);
-        pieces[29] = new Piece("bonde", "black", amountOfTiles-14);
-        pieces[30] = new Piece("bonde", "black", amountOfTiles-15);
-        pieces[31] = new Piece("bonde", "black", amountOfTiles-16);
-
-        //Setting default start pos tiles to occupied
-        for (int i = 0; i < 16; i++){
-            tiles[i].isOccupied = true;
-            tiles[amountOfTiles - (1 + i)].isOccupied = true;
-        }
-
-
     }
 
 
@@ -311,56 +263,70 @@ public class GameBoard extends AppCompatActivity {
             tile.button.setImageDrawable(getResources().getDrawable(R.drawable.blank));
         }
 
+        System.out.println("CHECKPOINT 1");
         //Updating all tiles with current piece-values
-        for (Piece piece : pieces) {
-            if (piece.color.equals("black") && piece.currentPosition >=0) {
-                switch (piece.type) {
-                    case "bonde":
-                        tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_farmer));
+        for (int i = 0; i < pieces.size(); i++) {
+            System.out.println("CHECKPOINT 2: " + i + "/" + pieces.size());
+
+            if (pieces.get(i).color.equals("black") && pieces.get(i).currentPosition >=0) {
+                System.out.println("CHECKPOINT 3");
+
+                switch (pieces.get(i).type) {
+                    case "pawn":
+                        tiles[pieces.get(i).currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_farmer));
                         break;
-                    case "lopare":
-                        tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_runner));
+                    case "bishop":
+                        tiles[pieces.get(i).currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_runner));
                         break;
-                    case "hast":
-                        tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_knight));
+                    case "knight":
+                        tiles[pieces.get(i).currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_knight));
                         break;
-                    case "torn":
-                        tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_tower));
+                    case "rook":
+                        tiles[pieces.get(i).currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_tower));
                         break;
-                    case "drottning":
-                        tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_queen));
+                    case "queen":
+                        tiles[pieces.get(i).currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_queen));
                         break;
-                    case "kung":
-                        tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_king));
+                    case "king":
+                        tiles[pieces.get(i).currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.black_king));
+                        break;
+                    default:
                         break;
                 }
-            } else if (piece.color.equals("white") && piece.currentPosition >=0){
-                switch (piece.type) {
-                    case "bonde":
-                        tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.white_farmer));
+            } else if (pieces.get(i).color.equals("white") && pieces.get(i).currentPosition >=0){
+                System.out.println("CHECKPOINT 3");
+
+                switch (pieces.get(i).type) {
+                    case "pawn":
+                        tiles[pieces.get(i).currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.white_farmer));
                         break;
-                    case "lopare":
-                        tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.white_runner));
+                    case "bishop":
+                        tiles[pieces.get(i).currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.white_runner));
                         break;
-                    case "hast":
-                        tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.white_knight));
+                    case "knight":
+                        tiles[pieces.get(i).currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.white_knight));
                         break;
-                    case "torn":
-                        tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.white_tower));
+                    case "rook":
+                        tiles[pieces.get(i).currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.white_tower));
                         break;
-                    case "drottning":
-                        tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.white_queen));
+                    case "queen":
+                        tiles[pieces.get(i).currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.white_queen));
                         break;
-                    case "kung":
-                        tiles[piece.currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.white_king));
+                    case "king":
+                        tiles[pieces.get(i).currentPosition].button.setImageDrawable(getResources().getDrawable(R.drawable.white_king));
+                        break;
+                    default:
                         break;
                 }
             }
         }
-
+        
     }
 
 
+    /**
+     * Load in gameinfo based on GameObject fetched from server
+     * */
     private void loadInGame(GameObject game){
 
         //Load in names and quotes
@@ -378,8 +344,59 @@ public class GameBoard extends AppCompatActivity {
         quoteView.setText(opponentQuote);
 
 
-        for(int i = 0; i < amountOfTiles; i++){
+        //Add all the pieces into their positions
+        pieces = new ArrayList<Piece>();
+        for(int i = 0; i < amountOfTiles*2; i+=2){
+            switch (game.getPiecePositions().substring(i, i+2)){
+                case "00":
+                break;
 
+                case "WB":
+                    pieces.add(new Piece("pawn", "white", i/2));
+                    break;
+
+                case "WT":
+                    pieces.add(new Piece("rook", "white", i/2));
+                    break;
+
+                case "WH":
+                    pieces.add(new Piece("knight", "white", i/2));
+                    break;
+
+                case "WL":
+                    pieces.add(new Piece("bishop", "white", i/2));
+                    break;
+                case "WD":
+                    pieces.add(new Piece("queen", "white", i/2));
+                    break;
+                case "WK":
+                    pieces.add(new Piece("king", "white", i/2));
+                    break;
+                case "BB":
+                    pieces.add(new Piece("pawn", "black", i/2));
+                    break;
+
+                case "BT":
+                    pieces.add(new Piece("rook", "black", i/2));
+                    break;
+
+                case "BH":
+                    pieces.add(new Piece("knight", "black", i/2));
+                    break;
+
+                case "BL":
+                    pieces.add(new Piece("bishop", "black", i/2));
+                    break;
+                case "BD":
+                    pieces.add(new Piece("queen", "black", i/2));
+                    break;
+                case "BK":
+                    pieces.add(new Piece("king", "black", i/2));
+                    break;
+
+                    default:
+                        pieces.add(new Piece("king", "black", i/2));
+            }
         }
 
 

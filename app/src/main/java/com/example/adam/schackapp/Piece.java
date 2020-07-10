@@ -13,7 +13,7 @@ public class Piece {
     }
 
 //Kommer få in tiles, pieces, och var alla andra befinner på brädet
-    public Integer[] getMoves(Piece[] pieces, int boardSize){
+    public Integer[] getMoves(ArrayList<Piece> pieces, int boardSize){
 
 
         /*
@@ -40,7 +40,7 @@ public class Piece {
     ArrayList<Integer> possibleMoves = new ArrayList<>(); //The list that is going to be returned
 
     switch (type){                  //switch dependent on what kind of unit is selected
-        case "torn":
+        case "rook":
 
             //left
             for(int positionToCheck = currentPosition -1; positionToCheck >= currentPosition - currentPosition%8; positionToCheck--){               //check edges of board and loops in right direction
@@ -73,7 +73,7 @@ public class Piece {
                 if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = -10000;}
             }
 
-        case "bond":
+        case "pawn":
 
 
 
