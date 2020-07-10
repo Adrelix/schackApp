@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -86,7 +87,7 @@ public class GameBoard extends AppCompatActivity {
 
 
         TextView opponentNameView = findViewById(R.id.playerName);
-        opponentNameView.setText(game.getPlayerOne());
+        opponentNameView.setText(opponentName);
 
 
         //Load information from database
@@ -359,7 +360,12 @@ public class GameBoard extends AppCompatActivity {
 
 
     private void loadInGame(GameObject game){
-        
+        if(game.getPlayerOne().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())){
+            opponentName = game.getPlayerTwo();
+        }
+        else {
+            opponentName = game.getPlayerOne();
+        }
 
 
     }
