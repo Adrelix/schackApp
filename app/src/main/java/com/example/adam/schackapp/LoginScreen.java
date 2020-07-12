@@ -27,7 +27,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginScreen extends AppCompatActivity {
 
+    FirebaseDatabase database;
     DatabaseReference databaseProfiles;
+    ValueEventListener valueEventListener;
     FirebaseAuth mAuth;
     ProfileObject userProfile;
 
@@ -41,7 +43,8 @@ public class LoginScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen_layout);
 
-        databaseProfiles = FirebaseDatabase.getInstance().getReference("profiles");
+        database = FirebaseDatabase.getInstance();
+        databaseProfiles = database.getReference("profiles");
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -104,7 +107,7 @@ public class LoginScreen extends AppCompatActivity {
 
 
                         //Get profile information from database
-                        ValueEventListener valueEventListener = new ValueEventListener() {   //whenever a query with this valueEventListener is called it runs the sequence below
+                        valueEventListener = new ValueEventListener() {   //whenever a query with this valueEventListener is called it runs the sequence below
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if(dataSnapshot.exists()){                          //Check that the user exist in the database
@@ -120,6 +123,7 @@ public class LoginScreen extends AppCompatActivity {
                                     //Send the information to the next activity
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                     intent.putExtra("profileToLoad", userProfile);
+                                    database.getReference().child("profiles").removeEventListener(valueEventListener);
                                     startActivity(intent);
                                 }
                             }
