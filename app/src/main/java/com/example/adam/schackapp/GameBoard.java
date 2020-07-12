@@ -9,14 +9,20 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -42,6 +48,10 @@ import java.util.ArrayList;
 public class GameBoard extends AppCompatActivity {
 
     //Game info
+    GameObject game;
+    int gameAtStart;
+    Query query;
+
     String opponentName;
     String gameID;
     int gameStatus;
@@ -62,13 +72,14 @@ public class GameBoard extends AppCompatActivity {
     Tiles[] tiles;
     ArrayList<Piece> pieces;
     Integer[] moves;        //Blåa rutorna som highlightas, dvs möjliga dragen
-    String currentTurnColor = "white";          //indicates whos turn it is, default white
+    String playerColor;          //indicates whos turn it is, default white
     int prevSelectedTile = -1;                  //shows the index of previously selected tiles, neg number for none selected
 
 
+    FirebaseDatabase database;
     DatabaseReference databaseProfiles;
     DatabaseReference databaseGames;
-
+    ValueEventListener valueEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +95,11 @@ public class GameBoard extends AppCompatActivity {
 
 
         //Load information from intent
-        GameObject game = (GameObject) getIntent().getSerializableExtra("gameToLoad");
+        game = (GameObject) getIntent().getSerializableExtra("gameToLoad");
+        gameAtStart = game.hashCode();
         loadInGame(game);
 
+        keepGameUpdated();
 
 
         TextView opponentNameView = findViewById(R.id.playerName);
@@ -94,8 +107,9 @@ public class GameBoard extends AppCompatActivity {
 
 
         //Load information from database
-        databaseProfiles = FirebaseDatabase.getInstance().getReference("profiles");
-        databaseGames = FirebaseDatabase.getInstance().getReference("games");
+        database = FirebaseDatabase.getInstance();
+        databaseProfiles = database.getReference("profiles");
+        databaseGames = database.getReference("games");
 
 
 
@@ -187,10 +201,20 @@ public class GameBoard extends AppCompatActivity {
     *                                                                                               \ no -> do nothing
     * */
     private void onPressedTile(int selectedTile){
+        System.out.println("PRESSED VALUES: " + game.getGameStatus() + " " + game.getPiecePositions());
+        //Return if it is the opponents turn
+        if((game.getPlayerOne().equals(opponentName) && game.getGameStatus() == 1 )|| game.getPlayerTwo().equals(opponentName) && game.getGameStatus() == 2){
+            return;
+        }
+
+        System.out.println("CHECKPOINT 1");
+
         //Is there a piece selected already?
         if(prevSelectedTile >= 0){
             if(tiles[prevSelectedTile].color.equals("white")){tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(WHITE_TILE));}         //reset color on tile
             else{tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(BLACK_TILE));}          //reset color on tile
+
+            System.out.println("CHECKPOINT 2");
 
             //check if a possible move is clicked and then proceed to update game values for that move
             for (int move : moves){
@@ -200,12 +224,16 @@ public class GameBoard extends AppCompatActivity {
                     }
                     pieces.get(getPieceIDAt(prevSelectedTile)).currentPosition=move;        //Update the moved pieces currentPosition
                     updatePieces();
-                    if(currentTurnColor.equals("white")){currentTurnColor="black";}
-                    else{currentTurnColor="white";}
+
+                    //THIS IS WHERE THE TURN IS CHANGED
+
+                    game.changeTurn();
+                    pushGame(game);
                 }
             }
 
 
+            System.out.println("CHECKPOINT 3");
 
             //Reset textures for all possible moves
             for(Integer move : moves){
@@ -217,8 +245,10 @@ public class GameBoard extends AppCompatActivity {
         }
         //There is not a prevSelect tile
         else{
+            System.out.println("CHECKPOINT 4");
+
             //Is this an non-empty tile that belongs to current player
-            if(getPieceIDAt(selectedTile)>=0 && pieces.get(getPieceIDAt(selectedTile)).color.equals(currentTurnColor)){
+            if(getPieceIDAt(selectedTile)>=0 && pieces.get(getPieceIDAt(selectedTile)).color.equals(playerColor)){
                 prevSelectedTile = selectedTile;                    //set this tile to previous selected tile
                 tiles[selectedTile].button.setBackgroundColor(getResources().getColor(R.color.selectedTile));             //Highlight tile
 
@@ -263,13 +293,10 @@ public class GameBoard extends AppCompatActivity {
             tile.button.setImageDrawable(getResources().getDrawable(R.drawable.blank));
         }
 
-        System.out.println("CHECKPOINT 1");
         //Updating all tiles with current piece-values
         for (int i = 0; i < pieces.size(); i++) {
-            System.out.println("CHECKPOINT 2: " + i + "/" + pieces.size());
 
             if (pieces.get(i).color.equals("black") && pieces.get(i).currentPosition >=0) {
-                System.out.println("CHECKPOINT 3");
 
                 switch (pieces.get(i).type) {
                     case "pawn":
@@ -294,7 +321,6 @@ public class GameBoard extends AppCompatActivity {
                         break;
                 }
             } else if (pieces.get(i).color.equals("white") && pieces.get(i).currentPosition >=0){
-                System.out.println("CHECKPOINT 3");
 
                 switch (pieces.get(i).type) {
                     case "pawn":
@@ -320,7 +346,7 @@ public class GameBoard extends AppCompatActivity {
                 }
             }
         }
-        
+
     }
 
 
@@ -332,11 +358,13 @@ public class GameBoard extends AppCompatActivity {
         //Load in names and quotes
         if(game.getPlayerOne().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())){
             opponentName = game.getPlayerTwo();
-            opponentQuote = game.getPlayerTwoQuote();
+            opponentQuote = "\"" + game.getPlayerTwoQuote() + "\"";
+            playerColor = "white";
         }
         else {
             opponentName = game.getPlayerOne();
-            opponentQuote = game.getPlayerOneQuote();
+            opponentQuote = "\"" + game.getPlayerOneQuote() + "\"";
+            playerColor = "black";
         }
 
         //Set the quote
@@ -402,8 +430,114 @@ public class GameBoard extends AppCompatActivity {
 
     }
 
-    private void pushGame(){
 
+
+    private void keepGameUpdated(){
+        //whenever a query with this valueEventListener is called it runs the sequence below
+        valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                GameObject fetchedGame;
+                for(DataSnapshot dbsnap : dataSnapshot.getChildren()){
+                    fetchedGame = dbsnap.getValue(GameObject.class);        //Assert the fetched data to a profile object
+                    System.out.println("FOUND FETCHED GAME WITH ID: " + fetchedGame.getGameID());
+                    System.out.println("OLD VALUES: " + game.getGameStatus() + " " + game.getPiecePositions());
+                    game.setPiecePositions(fetchedGame.getPiecePositions());
+                    game.setGameStatus(fetchedGame.getGameStatus());
+                    game.setLastPiecePositions(fetchedGame.getLastPiecePositions());
+                    game.setLastMoveDate(fetchedGame.getLastMoveDate());
+                    game.setRoundNumb(fetchedGame.getRoundNumb());
+                    System.out.println("NEW VALUES: " + game.getGameStatus() + " " + game.getPiecePositions());
+
+                    loadInGame(game);
+                    updatePieces();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        };
+
+        System.out.println("ATTEMPTING TO FETCH GAME WITH ID: " + game.getGameID());
+        query = FirebaseDatabase.getInstance().getReference("games").orderByChild("gameID").equalTo(game.getGameID());
+        query.addValueEventListener(valueEventListener);
+
+    }
+
+
+    /**
+     * Check if game has been updated and if so updates database
+     * */
+    private void pushGame(GameObject game){
+//TODO create push string
+        StringBuilder pushStringBuilder = new StringBuilder();
+
+        //Start by filling out the whole string with 00:s
+        for(int i = 0; i < amountOfTiles; i++){
+            pushStringBuilder.append("00");
+        }
+
+        //Replace the 00:s at positions with pieces to the right value
+        for(int i = 0; i < pieces.size(); i++) {
+            if(pieces.get(i).currentPosition<0){
+                continue;
+            }
+
+            //Change the first letter to B/W dependent on color
+            switch (pieces.get(i).color){
+                case "white":
+                    pushStringBuilder.setCharAt(pieces.get(i).currentPosition*2, 'W');
+                    break;
+                case "black":
+                    pushStringBuilder.setCharAt(pieces.get(i).currentPosition*2, 'B');
+                    break;
+            }
+            //Change the first letter to B/T/H/L/D/K dependent on type
+            switch (pieces.get(i).type){
+                case "pawn":
+                    pushStringBuilder.setCharAt(pieces.get(i).currentPosition*2+1, 'B');
+                    break;
+                case "rook":
+                    pushStringBuilder.setCharAt(pieces.get(i).currentPosition*2+1, 'T');
+                    break;
+                case "knight":
+                    pushStringBuilder.setCharAt(pieces.get(i).currentPosition*2+1, 'H');
+                    break;
+                case "bishop":
+                    pushStringBuilder.setCharAt(pieces.get(i).currentPosition*2+1, 'L');
+                    break;
+                case "queen":
+                    pushStringBuilder.setCharAt(pieces.get(i).currentPosition*2+1, 'D');
+                    break;
+                case "king":
+                    pushStringBuilder.setCharAt(pieces.get(i).currentPosition*2+1, 'K');
+                    break;
+            }
+        }
+
+
+
+        String pushString = pushStringBuilder.toString();
+        game.setLastPiecePositions(game.getPiecePositions());
+        game.setPiecePositions(pushString);
+
+        if(gameAtStart == game.hashCode()){
+            databaseGames.child(game.getGameID()).setValue(game);
+        }
+    }
+
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        database.getReference().child("games").removeEventListener(valueEventListener);
     }
 
 }

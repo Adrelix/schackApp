@@ -37,7 +37,7 @@ public class NewGameSettings extends AppCompatActivity {
         profile = (ProfileObject) getIntent().getSerializableExtra("profileToLoad");
 
         playerName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        currentDate = new SimpleDateFormat("yy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date());
 
         //Set the window dimensions
         DisplayMetrics dm = new DisplayMetrics();
@@ -73,8 +73,7 @@ public class NewGameSettings extends AppCompatActivity {
 
                     //TODO Create game with both users
                     String createdID = databaseGames.push().getKey();           //Get next item ID
-                    GameObject newGame = new GameObject(createdID, playerName, opponentName, profile.getQuote(),
-                            opponent.getQuote(), currentDate, 3);
+                    GameObject newGame = new GameObject(createdID, playerName, opponentName, profile.getQuote(), opponent.getQuote(), currentDate, 3);
                     databaseGames.child(createdID).setValue(newGame);                                     //Add Profile to database
                     finish();
 

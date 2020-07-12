@@ -17,6 +17,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.*;
+import java.util.Locale;
+
 
 public class MainActivity extends AppCompatActivity {
     ProfileObject profile;
@@ -66,16 +70,17 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                if(dataSnapshot.exists()){
-                    System.out.println("FOUND SNAPSHOT");
-                }
-                else {System.out.println("COULDNT FIDN SNAPSHOT");}
-
-
-                GameObject fetchedGame = null;
+                GameObject fetchedGame;
                 for(DataSnapshot dbsnap : dataSnapshot.getChildren()){
                     fetchedGame = dbsnap.getValue(GameObject.class);        //Assert the fetched data to a profile object
                     System.out.println("FOUND FETCHED GAME WITH ID: " + fetchedGame.getGameID());
+
+                    //Clear previous entries of game if it has been added before, this system works but isn't great.
+                    for(int i = 0; i < GameList.size(); i++){
+                        if(GameList.get(i).getGameID().equals(fetchedGame.getGameID())){
+                            GameList.remove(i);
+                        }
+                    }
                     GameList.add(fetchedGame);
                 }
 
@@ -88,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 for(int i = 0; i < GameList.size(); i++){
 
                     //Change the info to make sense dependent if player is playerOne or playerTwo
-                    //If player = playerOne
+                    //If player = playerOne TODO snygga till det här smh
                     if(playerName.equals(GameList.get(i).getPlayerTwo())){
                         playerTitle[i] = GameList.get(i).getPlayerOne();
                         if(GameList.get(i).getGameStatus() == 2){
@@ -108,12 +113,16 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-                    if(GameList.get(i).getGameStatus() == 2){
+                    if(GameList.get(i).getGameStatus() == 0){
                         subMessage[i] = "Game is over";
                     }
-                    //TODO fix lol
+                    //TODO implement lol
                     imgArray[i] = R.drawable.empty_profile_image;
                 }
+
+
+                //TODO sort GameList based on lastmove here
+
 
                 //Takes in the list of desired attributes, sends them to an adapter and then puts them in a list, creating the current games list
                 GameItemListAdapter adapter=new GameItemListAdapter(MainActivity.this, playerTitle, subMessage, imgArray);
@@ -165,6 +174,39 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("gameToLoad", game);
         startActivity(intent);
     }
+
+    /*
+     * Sort the current GameList after lastMoveDate
+     * *
+    private ArrayList<GameObject> sortGamesAfterDate(ArrayList<GameObject> GameList){
+        SimpleDateFormat sdformat = new SimpleDateFormat("yy-MM-dd-HH-mm-ss");
+        ArrayList<GameObject> sortedList = new ArrayList<GameObject>();
+
+        try{
+            while(GameList.size()>0){
+                Date dateMin= sdformat.parse(GameList.get(0).getLastMoveDate());
+                int indexOfMin = 0;
+
+                for(int k = 0; k < GameList.size(); k++){
+                    Date dateAtIndex = sdformat.parse(GameList.get(k).getLastMoveDate());
+                    if(dateMin.compareTo(dateAtIndex) > 0){
+                        dateMin = dateAtIndex;
+                        indexOfMin = k;
+                    }
+                }
+                sortedList.add(GameList.get(indexOfMin));
+                GameList.remove(indexOfMin);
+
+            }
+        }
+        catch (ParseException err){
+            err.printStackTrace();
+        }
+
+        return sortedList;
+    }
+
+    */
 
 
 }

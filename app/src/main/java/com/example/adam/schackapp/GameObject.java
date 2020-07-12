@@ -56,6 +56,13 @@ public class GameObject implements Serializable {
         return startPositions;
     }
 
+    /**
+     * Change turn, if gameStatus previously 1 it becomes 2 and vice verse
+     * */
+    public void changeTurn(){
+        this.gameStatus = 3-this.gameStatus;
+    }
+
     public void setGameStatus(int gameStatus) {
         this.gameStatus = gameStatus;
     }
@@ -124,8 +131,6 @@ public class GameObject implements Serializable {
     public String getLastMoveDate() {
         return lastMoveDate;
     }
-
-
 
 
 }
