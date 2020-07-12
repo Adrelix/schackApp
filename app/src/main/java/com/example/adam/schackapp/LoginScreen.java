@@ -2,6 +2,7 @@ package com.example.adam.schackapp;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,11 @@ public class LoginScreen extends AppCompatActivity {
     FirebaseAuth mAuth;
     ProfileObject userProfile;
 
+
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor sharedPrefEditor;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,10 +44,22 @@ public class LoginScreen extends AppCompatActivity {
         databaseProfiles = FirebaseDatabase.getInstance().getReference("profiles");
         mAuth = FirebaseAuth.getInstance();
 
+
+        //Store user information in sharedpref
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        sharedPrefEditor = sharedPreferences.edit();
+        String storedEmail = sharedPreferences.getString("storedEmail", "");
+        String storedPassword = sharedPreferences.getString("storedPassword", "");
+        EditText writtenEmail = (EditText) findViewById(R.id.profile_name);
+        EditText writtenPw = (EditText) findViewById(R.id.profile_password);
+        writtenEmail.setText(storedEmail);
+        writtenPw.setText(storedPassword);
+        login(storedEmail, storedPassword);
+
         Button loginBtn = (Button) findViewById(R.id.login);
         loginBtn.setOnClickListener(new View.OnClickListener()   {
             public void onClick(View v)  {
-               login();
+               loginButton();
             }
         });
         Button registerBtn = (Button) findViewById(R.id.register_new);
@@ -53,21 +71,32 @@ public class LoginScreen extends AppCompatActivity {
     }
 
 
+
+
+
+    private void loginButton(){
+        final EditText writtenEmail = (EditText) findViewById(R.id.profile_name);
+        final String AttemptedEmail = writtenEmail.getText().toString().trim();
+        final EditText writtenPw = (EditText) findViewById(R.id.profile_password);
+        final String AttemptedPassword = writtenPw.getText().toString().trim();
+
+        login(AttemptedEmail, AttemptedPassword);
+    }
     /*
     * Manages the login attempt
     * TODO investigate authorized user etc firebase stuff and maybe make login with FB-account instead
     * TODO fix fetch and control of data
     * */
-    private void login(){
-        EditText writtenEmail = (EditText) findViewById(R.id.profile_name);
-        final String AttemptedEmail = writtenEmail.getText().toString().trim();
-        EditText writtenPw = (EditText) findViewById(R.id.profile_password);
-        final String AttemptedPassword = writtenPw.getText().toString().trim();
+    private void login(final String attemptedEmail, final String attemptedPassword){
+        final EditText writtenEmail = (EditText) findViewById(R.id.profile_name);
+        final EditText writtenPw = (EditText) findViewById(R.id.profile_password);
 
-        if(!TextUtils.isEmpty(AttemptedEmail) && !TextUtils.isEmpty(AttemptedPassword)) {
+
+
+        if(!TextUtils.isEmpty(attemptedEmail) && !TextUtils.isEmpty(attemptedPassword)) {
 
             //Use Firebase Authentication to sign in user
-            mAuth.signInWithEmailAndPassword(AttemptedEmail, AttemptedPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            mAuth.signInWithEmailAndPassword(attemptedEmail, attemptedPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
@@ -82,6 +111,12 @@ public class LoginScreen extends AppCompatActivity {
                                     for(DataSnapshot dbsnap : dataSnapshot.getChildren()){ //TODO atm it read through the whole list even tho it's a single element list, should be fixed
                                         userProfile = dbsnap.getValue(ProfileObject.class);        //Assert the fetched data to a profile object
                                     }
+                                    sharedPrefEditor.putString("storedEmail", attemptedEmail);
+                                    sharedPrefEditor.putString("storedPassword", attemptedPassword);          //TODO encrypt this or smth
+                                    sharedPrefEditor.commit();
+
+
+
                                     //Send the information to the next activity
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                     intent.putExtra("profileToLoad", userProfile);
@@ -92,7 +127,7 @@ public class LoginScreen extends AppCompatActivity {
                             public void onCancelled(DatabaseError databaseError) {}
 
                         };
-                        Query query = FirebaseDatabase.getInstance().getReference("profiles").orderByChild("email").equalTo(AttemptedEmail);      //Fetch all profiles that match the attemptedEmail
+                        Query query = FirebaseDatabase.getInstance().getReference("profiles").orderByChild("email").equalTo(attemptedEmail);      //Fetch all profiles that match the attemptedEmail
                         query.addValueEventListener(valueEventListener);
 
 
@@ -100,6 +135,11 @@ public class LoginScreen extends AppCompatActivity {
 
 
                     } else {
+                        writtenEmail.setText("");
+                        writtenPw.setText("");
+                        sharedPrefEditor.remove("storedPassword");
+                        sharedPrefEditor.remove("storedEmail");
+                        sharedPrefEditor.commit();
                         Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
