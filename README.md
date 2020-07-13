@@ -1,2 +1,4 @@
-# schackApp
-Alex är katt
+# 3D-Chess Android Application
+Big brain game for big brain players
+
+![Example Image](/ResourcesAndConcepts/example_phones.png)
