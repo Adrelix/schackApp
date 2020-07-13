@@ -201,20 +201,16 @@ public class GameBoard extends AppCompatActivity {
     *                                                                                               \ no -> do nothing
     * */
     private void onPressedTile(int selectedTile){
-        System.out.println("PRESSED VALUES: " + game.getGameStatus() + " " + game.getPiecePositions());
         //Return if it is the opponents turn
         if((game.getPlayerOne().equals(opponentName) && game.getGameStatus() == 1 )|| game.getPlayerTwo().equals(opponentName) && game.getGameStatus() == 2){
             return;
         }
 
-        System.out.println("CHECKPOINT 1");
 
         //Is there a piece selected already?
         if(prevSelectedTile >= 0){
             if(tiles[prevSelectedTile].color.equals("white")){tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(WHITE_TILE));}         //reset color on tile
             else{tiles[prevSelectedTile].button.setBackground(getResources().getDrawable(BLACK_TILE));}          //reset color on tile
-
-            System.out.println("CHECKPOINT 2");
 
             //check if a possible move is clicked and then proceed to update game values for that move
             for (int move : moves){
@@ -233,7 +229,6 @@ public class GameBoard extends AppCompatActivity {
             }
 
 
-            System.out.println("CHECKPOINT 3");
 
             //Reset textures for all possible moves
             for(Integer move : moves){
@@ -245,7 +240,6 @@ public class GameBoard extends AppCompatActivity {
         }
         //There is not a prevSelect tile
         else{
-            System.out.println("CHECKPOINT 4");
 
             //Is this an non-empty tile that belongs to current player
             if(getPieceIDAt(selectedTile)>=0 && pieces.get(getPieceIDAt(selectedTile)).color.equals(playerColor)){
@@ -442,14 +436,11 @@ public class GameBoard extends AppCompatActivity {
                 GameObject fetchedGame;
                 for(DataSnapshot dbsnap : dataSnapshot.getChildren()){
                     fetchedGame = dbsnap.getValue(GameObject.class);        //Assert the fetched data to a profile object
-                    System.out.println("FOUND FETCHED GAME WITH ID: " + fetchedGame.getGameID());
-                    System.out.println("OLD VALUES: " + game.getGameStatus() + " " + game.getPiecePositions());
                     game.setPiecePositions(fetchedGame.getPiecePositions());
                     game.setGameStatus(fetchedGame.getGameStatus());
                     game.setLastPiecePositions(fetchedGame.getLastPiecePositions());
                     game.setLastMoveDate(fetchedGame.getLastMoveDate());
                     game.setRoundNumb(fetchedGame.getRoundNumb());
-                    System.out.println("NEW VALUES: " + game.getGameStatus() + " " + game.getPiecePositions());
 
                     loadInGame(game);
                     updatePieces();
