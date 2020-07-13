@@ -61,7 +61,7 @@ public class Piece {
             break;
 
         case "king":
-            possibleMoves = kingMoves(allPiecesPosition, boardSize);
+            possibleMoves = kingMoves(allPiecesPosition, boardSize, pieces);
             break;
 
         default:
@@ -157,32 +157,32 @@ public class Piece {
         //left
         for(int positionToCheck = currentPosition -1; positionToCheck >= currentPosition - currentPosition%8; positionToCheck--){               //check edges of board and loops in right direction
             if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}                                  //Check if tile is empty or enemy and if so adds to possible moves
-            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = -10000;} //checks if the loop should continue (if there are more tiles in same direction worth checking)
+            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ break;} //checks if the loop should continue (if there are more tiles in same direction worth checking)
         }
         //right
         for(int positionToCheck = currentPosition +1; positionToCheck < currentPosition + 8-currentPosition%8; positionToCheck++){
             if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
-            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = 10000;}
+            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ break;}
         }
         //up y-axis
-        for(int positionToCheck = currentPosition-8; positionToCheck >= currentPosition - currentPosition%64; positionToCheck-=8){
+        for(int positionToCheck = currentPosition-8; checkIfSameBoard(positionToCheck); positionToCheck-=8){
             if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
-            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = -10000;}
+            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ break;}
         }
         //ner y-axis
-        for(int positionToCheck = currentPosition+8; positionToCheck < currentPosition + 64-currentPosition%64; positionToCheck+=8){
+        for(int positionToCheck = currentPosition+8; checkIfSameBoard(positionToCheck); positionToCheck+=8){
             if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
-            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = 10000;}
+            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ break;}
         }
         //upp z-led
         for(int positionToCheck = currentPosition+64; positionToCheck < boardSize; positionToCheck+=64){
             if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
-            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = 10000;}
+            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){break;}
         }
         //ner z-led
         for(int positionToCheck = currentPosition-64; positionToCheck >= 0; positionToCheck-=64){
             if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
-            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ positionToCheck = -10000;}
+            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ break;}
         }
 
         return possibleMoves;
@@ -210,6 +210,39 @@ public class Piece {
     private ArrayList<Integer> bishopMoves(int[] allPiecesPosition, int boardSize) {
         ArrayList<Integer> possibleMoves = new ArrayList<>(); //The list that is going to be returned
 
+
+        //left
+        for(int positionToCheck = currentPosition -1; positionToCheck >= currentPosition - currentPosition%8; positionToCheck--){               //check edges of board and loops in right direction
+            if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}                                  //Check if tile is empty or enemy and if so adds to possible moves
+            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ break;} //checks if the loop should continue (if there are more tiles in same direction worth checking)
+        }
+        //right
+        for(int positionToCheck = currentPosition +1; positionToCheck < currentPosition + 8-currentPosition%8; positionToCheck++){
+            if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
+            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ break;}
+        }
+        //up y-axis
+        for(int positionToCheck = currentPosition-8; checkIfSameBoard(positionToCheck); positionToCheck-=8){
+            if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
+            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ break;}
+        }
+        //ner y-axis
+        for(int positionToCheck = currentPosition+8; checkIfSameBoard(positionToCheck); positionToCheck+=8){
+            if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
+            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ break;}
+        }
+        //upp z-led
+        for(int positionToCheck = currentPosition+64; positionToCheck < boardSize; positionToCheck+=64){
+            if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
+            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){break;}
+        }
+        //ner z-led
+        for(int positionToCheck = currentPosition-64; positionToCheck >= 0; positionToCheck-=64){
+            if (!checkCollisionFriend(positionToCheck, allPiecesPosition)){possibleMoves.add(positionToCheck);}
+            if(checkCollisionFriend(positionToCheck, allPiecesPosition) || checkCollisionFoe(positionToCheck, allPiecesPosition)){ break;}
+        }
+
+
         return possibleMoves;
     }
 
@@ -219,7 +252,7 @@ public class Piece {
         return possibleMoves;
     }
 
-    private ArrayList<Integer> kingMoves(int[] allPiecesPosition, int boardSize) {
+    private ArrayList<Integer> kingMoves(int[] allPiecesPosition, int boardSize, ArrayList<Piece> pieces) {
         ArrayList<Integer> possibleMoves = new ArrayList<>(); //The list that is going to be returned
 
         return possibleMoves;
@@ -233,6 +266,13 @@ public class Piece {
     }
 
 
+    private boolean checkIfSameSideOfBoard(int Position, int MaxAllowedDistance){
+        return Math.abs((Position%8)-(currentPosition%8)) > MaxAllowedDistance;
+    }
+
+    private boolean checkIfSameBoard(int Position){
+        return Position >= currentPosition - currentPosition%64 && Position < currentPosition + 64-currentPosition%64;
+    }
 
 }
 
