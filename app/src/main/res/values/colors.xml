@@ -7,4 +7,5 @@
     <color name="selectedTile">#ff00c3</color>
     <color name="black">#0a0809</color>
     <color name="transparent">#00ffffff</color>
+    <color name="lastMoveTile">#ff1a1a</color>
 </resources>

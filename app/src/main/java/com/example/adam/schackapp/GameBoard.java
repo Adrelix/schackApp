@@ -31,16 +31,16 @@ import java.util.ArrayList;
 
 
 /*
-* Database plan:
-*
-*   User(String id, String name, String password, Drawable? profilePic, String quote)
-*   Game(String gameId, String playerOne, String playerTwo, int gameOver, int amountOfBoards, int currentTurn, String piecePositions, int roundNumb, String startDate)
-*
-*   gameOver: should show if game has been won prev round to disable movements etc (not sure if necessary)
-*   currentTurn: should be a 1 or 2 to show if it's playerOnes or playerTwos turn
-*   piecePositions: should be some stored information about all pieces and there positions, not sure if it can be implemented as the whole Pieces structure or if a clever string should be made
-*
-* */
+ * Database plan:
+ *
+ *   User(String id, String name, String password, Drawable? profilePic, String quote)
+ *   Game(String gameId, String playerOne, String playerTwo, int gameOver, int amountOfBoards, int currentTurn, String piecePositions, int roundNumb, String startDate)
+ *
+ *   gameOver: should show if game has been won prev round to disable movements etc (not sure if necessary)
+ *   currentTurn: should be a 1 or 2 to show if it's playerOnes or playerTwos turn
+ *   piecePositions: should be some stored information about all pieces and there positions, not sure if it can be implemented as the whole Pieces structure or if a clever string should be made
+ *
+ * */
 
 
 
@@ -192,14 +192,14 @@ public class GameBoard extends AppCompatActivity {
     }
 
     /**
-    * All actions that happens when any tile is pressed is controlled here, flowchart looks like this:
-    *
-    *                                                                     / yes-> move piece and update values and change current turnholder
-    *                                      / yes -> Is it a possible move - no -> deselect previously selected piece
-    * OnClick->Is any other tile selected?
-    *                                        \ no -> Is there a piece of current turnholders color here? - yes -> show possible moves
-    *                                                                                               \ no -> do nothing
-    * */
+     * All actions that happens when any tile is pressed is controlled here, flowchart looks like this:
+     *
+     *                                                                     / yes-> move piece and update values and change current turnholder
+     *                                      / yes -> Is it a possible move - no -> deselect previously selected piece
+     * OnClick->Is any other tile selected?
+     *                                        \ no -> Is there a piece of current turnholders color here? - yes -> show possible moves
+     *                                                                                               \ no -> do nothing
+     * */
     private void onPressedTile(int selectedTile){
         //Return if it is the opponents turn
         if((game.getPlayerOne().equals(opponentName) && game.getGameStatus() == 1 )|| game.getPlayerTwo().equals(opponentName) && game.getGameStatus() == 2){
@@ -246,7 +246,7 @@ public class GameBoard extends AppCompatActivity {
                 prevSelectedTile = selectedTile;                    //set this tile to previous selected tile
                 tiles[selectedTile].button.setBackgroundColor(getResources().getColor(R.color.selectedTile));             //Highlight tile
 
-                moves = pieces.get(getPieceIDAt(selectedTile)).getMoves(pieces, amountOfTiles);
+                moves = pieces.get(getPieceIDAt(selectedTile)).getMoves(pieces, amountOfTiles, 1);
 
                 for(Integer move : moves){
                     tiles[move].button.setBackgroundColor(getResources().getColor(R.color.highlightedTile));         //Highlight possible moves
@@ -261,9 +261,9 @@ public class GameBoard extends AppCompatActivity {
 
 
     /**
-    * Get the id of a piece at position
-    * @param tileID on board
-    * */
+     * Get the id of a piece at position
+     * @param tileID on board
+     * */
     private int getPieceIDAt(int tileID){
         for (int i = 0; i < pieces.size(); i++){
             if(pieces.get(i).currentPosition == tileID){
@@ -371,7 +371,7 @@ public class GameBoard extends AppCompatActivity {
         for(int i = 0; i < amountOfTiles*2; i+=2){
             switch (game.getPiecePositions().substring(i, i+2)){
                 case "00":
-                break;
+                    break;
 
                 case "WB":
                     pieces.add(new Piece("pawn", "white", i/2));
@@ -416,8 +416,8 @@ public class GameBoard extends AppCompatActivity {
                     pieces.add(new Piece("king", "black", i/2));
                     break;
 
-                    default:
-                        pieces.add(new Piece("king", "black", i/2));
+                default:
+                    pieces.add(new Piece("king", "black", i/2));
             }
         }
 
@@ -532,5 +532,3 @@ public class GameBoard extends AppCompatActivity {
     }
 
 }
-
-

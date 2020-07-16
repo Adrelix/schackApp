@@ -12,14 +12,22 @@ public class Piece {
         this.currentPosition = initialPosition;
     }
 
-//Kommer få in tiles, pieces, och var alla andra befinner på brädet
-    public Integer[] getMoves(ArrayList<Piece> pieces, int boardSize){
+    /**
+     * Creates, based on type, position and color, an arrayList with all the possible
+     * moves the piece can make. Uses ****moves() as a help function to make things less messy
+     * @param pieces is all currently active pieces
+     * @param boardSize is amount of tiles in current game
+     * @param status is either 1 or 2, depending on where function is called for.
+     *               If status == 1, checkIfMovePutYouInCheck will be called
+     *               Else if Status == 2 it will be skipped (aka from function checkIfMovePutYouInCheck)
+     * */
+    public Integer[] getMoves(ArrayList<Piece> pieces, int boardSize, int status){
 
 
         /*
-        * allPiecesPosition är en array med alla positions på boarden och har fyllt
-        * alla positions utan värde med 0, alla med en vän som 1 och alla med en fiende med 2
-        * */
+         * allPiecesPosition är en array med alla positions på boarden och har fyllt
+         * alla positions utan värde med 0, alla med en vän som 1 och alla med en fiende med 2
+         * */
         int[] allPiecesPosition = new int[boardSize];
 
         for (int i = 0; i < allPiecesPosition.length; i++){     //set all position start values to 0, not sure how necessary it is but it's a catch for null errors
@@ -37,41 +45,52 @@ public class Piece {
         }
 
 
-    ArrayList<Integer> possibleMoves; //The list that is going to be returned
+        ArrayList<Integer> possibleMoves; //The list that is going to be returned
 
-    switch (type){                  //switch dependent on what kind of unit is selected
-        case "pawn":
-            possibleMoves = pawnMoves(allPiecesPosition, boardSize);
-            break;
+        switch (type){                  //switch dependent on what kind of unit is selected
+            case "pawn":
+                possibleMoves = pawnMoves(allPiecesPosition, boardSize);
+                break;
 
-        case "rook":
-            possibleMoves = rookMoves(allPiecesPosition, boardSize);
-            break;
+            case "rook":
+                possibleMoves = rookMoves(allPiecesPosition, boardSize);
+                break;
 
-        case "knight":
-            possibleMoves = knightMoves(allPiecesPosition, boardSize);
-            break;
+            case "knight":
+                possibleMoves = knightMoves(allPiecesPosition, boardSize);
+                break;
 
-        case "bishop":
-            possibleMoves = bishopMoves(allPiecesPosition, boardSize);
-            break;
+            case "bishop":
+                possibleMoves = bishopMoves(allPiecesPosition, boardSize);
+                break;
 
-        case "queen":
-            possibleMoves = queenMoves(allPiecesPosition, boardSize);
-            break;
+            case "queen":
+                possibleMoves = queenMoves(allPiecesPosition, boardSize);
+                break;
 
-        case "king":
-            possibleMoves = kingMoves(allPiecesPosition, boardSize, pieces);
-            break;
+            case "king":
+                possibleMoves = kingMoves(allPiecesPosition, boardSize);
+                break;
 
-        default:
-            possibleMoves = new ArrayList<Integer>();
-            possibleMoves.add(currentPosition -8);            //if no type detected, give it ability to walk 1 step in all (2D) directions
-            possibleMoves.add(currentPosition +8);
-            possibleMoves.add(currentPosition -1);
-            possibleMoves.add(currentPosition +1);
-           break;
-    }
+            default:
+                possibleMoves = new ArrayList<Integer>();
+                possibleMoves.add(currentPosition -8);            //if no type detected, give it ability to walk 1 step in all (2D) directions
+                possibleMoves.add(currentPosition +8);
+                possibleMoves.add(currentPosition -1);
+                possibleMoves.add(currentPosition +1);
+                break;
+        }
+
+        //Sort out all moves that would put you into check
+        if(status==1){
+            for(int i = 0; i < possibleMoves.size(); i++){
+                if(checkIfMovePutYouInCheck(pieces, possibleMoves.get(i), boardSize)){
+                    System.out.println("REMOVING MOVE WITH INDEX: " +  i + " AT POSITION: " + possibleMoves.get(i));
+                    possibleMoves.remove(i);
+                    i--;
+                }
+            }
+        }
 
         Integer[] array = possibleMoves.toArray(new Integer[0]);        //Translates the ArrayList into an array and returns it
         return array;
@@ -314,7 +333,7 @@ public class Piece {
         return possibleMoves;
     }
 
-    private ArrayList<Integer> kingMoves(int[] allPiecesPosition, int boardSize, ArrayList<Piece> pieces) {
+    private ArrayList<Integer> kingMoves(int[] allPiecesPosition, int boardSize) {
         ArrayList<Integer> possibleMoves = new ArrayList<>(); //The list that is going to be returned
 
         // All 24 possible moves in all directions that are supposed to be sorted out which are possible or not
@@ -350,24 +369,97 @@ public class Piece {
         return possibleMoves;
     }
 
-    private boolean checkCollisionFriend(int Position, int[] allPiecesPosition){
-        return allPiecesPosition[Position] == 1;
-    }
-    private boolean checkCollisionFoe(int Position, int[] allPiecesPosition){
-        return allPiecesPosition[Position] == 2;
+
+
+    private boolean checkIfMovePutYouInCheck(ArrayList<Piece> pieces, int move,  int boardSize){
+    Integer kingPos = -1;
+    int savedPosition = currentPosition;
+
+        for (int i = 0; i < pieces.size(); i++) {
+            if(pieces.get(i).color.equals(color) && pieces.get(i).type.equals("king")){
+                kingPos = pieces.get(i).currentPosition;
+                if(type.equals("king")){
+                    kingPos = move;
+                }
+            }
+
+            if (pieces.get(i).currentPosition == currentPosition){
+                System.out.println("CURRENTPOSITION: " + currentPosition);
+                pieces.get(i).currentPosition = move;
+                System.out.println("CURRENTPOSITION AFTER MOVE: " + currentPosition);
+            }
+        }
+
+        for (int i = 0; i < pieces.size(); i++){
+            if(!pieces.get(i).color.equals(color)){
+                Integer[] enemyMoves = pieces.get(i).getMoves(pieces, boardSize, 2);
+                for (Integer enemyMove: enemyMoves) {
+                    System.out.println("ENEMYMOVE: " + enemyMove + ", KINGPOS: " + kingPos);
+                    if(enemyMove.equals(kingPos) && move != pieces.get(i).currentPosition){
+                        System.out.println("COLLISION AT: " + enemyMove);
+                        currentPosition = savedPosition;
+                        return true;
+                    }
+                }
+            }
+        }
+
+
+        currentPosition = savedPosition;
+        return false;
     }
 
+/**
+ * Checks a tile to see if there is a friendly piece (piece of the same color) there or not)
+ * */
+    private boolean checkCollisionFriend(int Position, int[] allPiecesPosition){
+        //TODO find a way to not use try/catch, it's ugly.
+        try{
+            return allPiecesPosition[Position] == 1;
+
+        }catch (ArrayIndexOutOfBoundsException e){
+            return true;
+        }
+    }
+    /**
+     * Checks a tile to see if there is a foe piece (piece of different color) there or not)
+     * */
+    private boolean checkCollisionFoe(int Position, int[] allPiecesPosition){
+        try{
+            return allPiecesPosition[Position] == 2;
+
+        }catch (ArrayIndexOutOfBoundsException e){
+            return false;
+        }
+    }
+
+    /**
+     * Check if
+     * @param Position is on the same horizontal (x-axis) row as currentPosition
+     * */
     private boolean checkIfSameHorizontalRow(int Position){
         return Position < currentPosition + 8-currentPosition%8 && Position >= currentPosition - currentPosition%8;
     }
+
+    /**
+     * Compares
+     * @param lastPos which is usually currentPosition, with
+     * @param Position and returns true if they are on the same side (x-axis) of the board,
+     *                 aka hasn't jumped to the other side of the board due to tiles being following numbered.
+     * */
     private boolean checkIfSameSideOfBoard(int lastPos, int Position){
         if(type.equals("knight")){
             return Position%8 == lastPos%8+1 || Position%8 == lastPos%8-1 || Position%8 == lastPos%8 || Position%8 == lastPos%8+2 || Position%8 == lastPos%8-2;
         }
         return Position%8 == lastPos%8+1 || Position%8 == lastPos%8-1 || Position%8 == lastPos%8;
     }
+
+    /**
+     * Compares
+     * @param lastPos which is usually currentPosition, with
+     * @param Position and returns true if they are on the same board.
+     * */
     private boolean checkIfSameBoard(int lastPos, int Position){
         return Position >= lastPos - lastPos%64 && Position < lastPos + 64-lastPos%64;
     }
 }
-
