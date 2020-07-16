@@ -85,7 +85,6 @@ public class Piece {
         if(status==1){
             for(int i = 0; i < possibleMoves.size(); i++){
                 if(checkIfMovePutYouInCheck(pieces, possibleMoves.get(i), boardSize)){
-                    System.out.println("REMOVING MOVE WITH INDEX: " +  i + " AT POSITION: " + possibleMoves.get(i));
                     possibleMoves.remove(i);
                     i--;
                 }
@@ -375,28 +374,29 @@ public class Piece {
     Integer kingPos = -1;
     int savedPosition = currentPosition;
 
+
+    //First emulating the situation **IF** the move was made
         for (int i = 0; i < pieces.size(); i++) {
+            //Finding where the king would be
             if(pieces.get(i).color.equals(color) && pieces.get(i).type.equals("king")){
                 kingPos = pieces.get(i).currentPosition;
                 if(type.equals("king")){
                     kingPos = move;
                 }
             }
-
+            //Placing the moved piece to it's new position
             if (pieces.get(i).currentPosition == currentPosition){
-                System.out.println("CURRENTPOSITION: " + currentPosition);
                 pieces.get(i).currentPosition = move;
-                System.out.println("CURRENTPOSITION AFTER MOVE: " + currentPosition);
             }
         }
 
+        //Checking all the possible moves the enemy could make
         for (int i = 0; i < pieces.size(); i++){
             if(!pieces.get(i).color.equals(color)){
                 Integer[] enemyMoves = pieces.get(i).getMoves(pieces, boardSize, 2);
                 for (Integer enemyMove: enemyMoves) {
-                    System.out.println("ENEMYMOVE: " + enemyMove + ", KINGPOS: " + kingPos);
+                    //if one of them is a king-killing move, function returns true
                     if(enemyMove.equals(kingPos) && move != pieces.get(i).currentPosition){
-                        System.out.println("COLLISION AT: " + enemyMove);
                         currentPosition = savedPosition;
                         return true;
                     }
@@ -404,7 +404,7 @@ public class Piece {
             }
         }
 
-
+        //Value of current piece is restored
         currentPosition = savedPosition;
         return false;
     }
