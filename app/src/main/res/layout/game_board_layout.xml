@@ -112,7 +112,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -124,8 +124,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:scaleType="fitCenter"
             android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
             app:srcCompat="@drawable/black_tower"
             tools:background="@color/common_google_signin_btn_text_dark_default" />
 
@@ -134,8 +134,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:scaleType="fitCenter"
             android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
             app:srcCompat="@drawable/black_knight"
             tools:background="@color/common_google_signin_btn_text_dark_default" />
 
@@ -144,8 +144,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:scaleType="fitCenter"
             android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
             app:srcCompat="@drawable/black_runner"
             tools:background="@color/common_google_signin_btn_text_dark_default" />
 
@@ -154,8 +154,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:scaleType="fitCenter"
             android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
             app:srcCompat="@drawable/black_queen"
             tools:background="@color/common_google_signin_btn_text_dark_default" />
 
