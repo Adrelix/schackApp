@@ -2,6 +2,8 @@
     <string name="app_name">shackApp</string>
     <string name="login">Login</string>
     <string name="login_name">Profile name</string>
+    <string name="profile">Profile</string>
+    <string name="rules">Rules</string>
     <string name="email">Email</string>
     <string name="why_email">We only ask for email for account security reasons. We will never send you spam, offers, etc.</string>
     <string name="login_password">Password</string>
@@ -12,6 +14,8 @@
     <string name="type_name">Type name...</string>
     <string name="create_screen_tip">Big brain players do big brain moves. If you find yourself doing small brain moves, odds are you are a small brain player.</string>
     <string name="create">Create</string>
+    <string name="pawn_promotion">Pawn Promotion</string>
+    <string name="pawn_promotion_text">Choose a piece of your choice to upgrade your pawn from!</string>
 
 
 </resources>

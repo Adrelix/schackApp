@@ -17,9 +17,9 @@ public class Piece {
      * moves the piece can make. Uses ****moves() as a help function to make things less messy
      * @param pieces is all currently active pieces
      * @param boardSize is amount of tiles in current game
-     * @param status is either 1 or 2, depending on where function is called for.
-     *               If status == 1, checkIfMovePutYouInCheck will be called
-     *               Else if Status == 2 it will be skipped (aka from function checkIfMovePutYouInCheck)
+     * @param status is either -1 or something >=0, depending on where function is called for.
+     *               If status == -1, checkIfMovePutYouInCheck will be called
+     *               Else if Status >= 0 it will be skipped (aka from function checkIfMovePutYouInCheck), and allPiecesPosition will have king location as 0
      * */
     public Integer[] getMoves(ArrayList<Piece> pieces, int boardSize, int status){
 
@@ -42,6 +42,9 @@ public class Piece {
                     allPiecesPosition[piece.currentPosition] = 2;
                 }
             }
+        }
+        if(status>=0){
+            allPiecesPosition[status] = 0;
         }
 
 
@@ -82,7 +85,7 @@ public class Piece {
         }
 
         //Sort out all moves that would put you into check
-        if(status==1){
+        if(status==-1){
             for(int i = 0; i < possibleMoves.size(); i++){
                 if(checkIfMovePutYouInCheck(pieces, possibleMoves.get(i), boardSize)){
                     possibleMoves.remove(i);
@@ -369,7 +372,10 @@ public class Piece {
     }
 
 
-
+/**
+ * Emulates the board if a move should be made and returns true/false dependent on if the player
+ * would be set in check if the move was followed through
+ * */
     private boolean checkIfMovePutYouInCheck(ArrayList<Piece> pieces, int move,  int boardSize){
     Integer kingPos = -1;
     int savedPosition = currentPosition;
@@ -382,6 +388,7 @@ public class Piece {
                 kingPos = pieces.get(i).currentPosition;
                 if(type.equals("king")){
                     kingPos = move;
+
                 }
             }
             //Placing the moved piece to it's new position
@@ -393,8 +400,9 @@ public class Piece {
         //Checking all the possible moves the enemy could make
         for (int i = 0; i < pieces.size(); i++){
             if(!pieces.get(i).color.equals(color)){
-                Integer[] enemyMoves = pieces.get(i).getMoves(pieces, boardSize, 2);
+                Integer[] enemyMoves = pieces.get(i).getMoves(pieces, boardSize, kingPos);
                 for (Integer enemyMove: enemyMoves) {
+                    System.out.println("ENEMYMOVE BY: "+ pieces.get(i).type + " AT: " + enemyMove + " KINGPOS: " + kingPos + " CURRENTPOS: " + currentPosition);
                     //if one of them is a king-killing move, function returns true
                     if(enemyMove.equals(kingPos) && move != pieces.get(i).currentPosition){
                         currentPosition = savedPosition;

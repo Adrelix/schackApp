@@ -1,5 +1,6 @@
 package com.example.adam.schackapp;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -74,7 +76,9 @@ public class GameBoard extends AppCompatActivity {
     Integer[] moves;        //Blåa rutorna som highlightas, dvs möjliga dragen
     String playerColor;          //indicates whos turn it is, default white
     int prevSelectedTile = -1;                  //shows the index of previously selected tiles, neg number for none selected
+    boolean moveDisabled = false;
 
+    int loopVar; //TODO get this disgrace out of the code
 
     FirebaseDatabase database;
     DatabaseReference databaseProfiles;
@@ -97,7 +101,7 @@ public class GameBoard extends AppCompatActivity {
         //Load information from intent
         game = (GameObject) getIntent().getSerializableExtra("gameToLoad");
         gameAtStart = game.hashCode();
-        loadInGame(game);
+        loadInGame();
 
         keepGameUpdated();
 
@@ -202,7 +206,7 @@ public class GameBoard extends AppCompatActivity {
      * */
     private void onPressedTile(int selectedTile){
         //Return if it is the opponents turn
-        if((game.getPlayerOne().equals(opponentName) && game.getGameStatus() == 1 )|| game.getPlayerTwo().equals(opponentName) && game.getGameStatus() == 2){
+        if((game.getPlayerOne().equals(opponentName) && game.getGameStatus() == 1 )|| game.getPlayerTwo().equals(opponentName) && game.getGameStatus() == 2 || moveDisabled){
             return;
         }
 
@@ -214,17 +218,15 @@ public class GameBoard extends AppCompatActivity {
 
             //check if a possible move is clicked and then proceed to update game values for that move
             for (int move : moves){
-                if(selectedTile == move){
-                    if(getPieceIDAt(move) >= 0){                                //check if move is to an occupied tile
-                        pieces.get(getPieceIDAt(move)).currentPosition = -10;       //delete any piece that stands at tile moved to
+                if(selectedTile == move) {
+                        if (getPieceIDAt(move) >= 0) {                                //check if move is to an occupied tile
+                            pieces.get(getPieceIDAt(move)).currentPosition = -10;       //delete any piece that stands at tile moved to
+                        }
+
+                        pieces.get(getPieceIDAt(prevSelectedTile)).currentPosition = move;        //Update the moved pieces currentPosition
+                    if (!checkPawnPromotion(move)) {
+                        changeTurn();
                     }
-                    pieces.get(getPieceIDAt(prevSelectedTile)).currentPosition=move;        //Update the moved pieces currentPosition
-                    updatePieces();
-
-                    //THIS IS WHERE THE TURN IS CHANGED
-
-                    game.changeTurn();
-                    pushGame(game);
                 }
             }
 
@@ -246,7 +248,7 @@ public class GameBoard extends AppCompatActivity {
                 prevSelectedTile = selectedTile;                    //set this tile to previous selected tile
                 tiles[selectedTile].button.setBackgroundColor(getResources().getColor(R.color.selectedTile));             //Highlight tile
 
-                moves = pieces.get(getPieceIDAt(selectedTile)).getMoves(pieces, amountOfTiles, 1);
+                moves = pieces.get(getPieceIDAt(selectedTile)).getMoves(pieces, amountOfTiles, -1);
 
                 for(Integer move : moves){
                     tiles[move].button.setBackgroundColor(getResources().getColor(R.color.highlightedTile));         //Highlight possible moves
@@ -345,9 +347,106 @@ public class GameBoard extends AppCompatActivity {
 
 
     /**
+     * Check if opponent is checked and can't do any other move, if so sets game.gamestatus to 0 and game is over
+     * TODO test this
+     * */
+    private void checkIfCheckMate(){
+        for(Piece piece : pieces){
+            if((piece.color.equals("white") && game.getGameStatus()==1) || piece.color.equals("black") && game.getGameStatus()==2){
+                Integer[] moves = piece.getMoves(pieces, amountOfTiles, 1);
+                if(moves.length != 0){return;}
+            }
+        }
+        game.setGameStatus(0);
+    }
+
+    private boolean checkPawnPromotion(final int move){
+        if((move < 8 && pieces.get(getPieceIDAt(move)).type.equals("pawn") &&
+                pieces.get(getPieceIDAt(move)).color.equals("black")) ||
+                move >= amountOfTiles-8 && pieces.get(getPieceIDAt(move)).type.equals("pawn") &&
+                        pieces.get(getPieceIDAt(move)).color.equals("white") ){
+
+            moveDisabled = true;
+
+            final LinearLayout buttonLayout = (LinearLayout) findViewById(R.id.buttonLayout);
+            ImageButton rookButton = (ImageButton) findViewById(R.id.rook_promotion);
+            ImageButton knightButton = (ImageButton) findViewById(R.id.knight_promotion);
+            ImageButton bishopButton = (ImageButton) findViewById(R.id.bishop_promotion);
+            ImageButton queenButton = (ImageButton) findViewById(R.id.queen_promotion);
+
+            if(pieces.get(getPieceIDAt(move)).color.equals("white")){
+                rookButton.setImageDrawable(getResources().getDrawable(R.drawable.white_tower));
+                knightButton.setImageDrawable(getResources().getDrawable(R.drawable.white_knight));
+                bishopButton.setImageDrawable(getResources().getDrawable(R.drawable.white_runner));
+                queenButton.setImageDrawable(getResources().getDrawable(R.drawable.white_queen));
+            }
+            else if(pieces.get(getPieceIDAt(move)).color.equals("black")){
+                rookButton.setImageDrawable(getResources().getDrawable(R.drawable.black_tower));
+                knightButton.setImageDrawable(getResources().getDrawable(R.drawable.black_knight));
+                bishopButton.setImageDrawable(getResources().getDrawable(R.drawable.black_runner));
+                queenButton.setImageDrawable(getResources().getDrawable(R.drawable.black_queen));
+            }
+            buttonLayout.setVisibility(View.VISIBLE);
+
+
+            rookButton.setOnClickListener(new View.OnClickListener()   {
+                public void onClick(View v)  {
+                    pieces.get(getPieceIDAt(move)).type = "rook";
+                    buttonLayout.setVisibility(View.GONE);
+                    moveDisabled = false;
+                    changeTurn();
+                }
+            });
+            knightButton.setOnClickListener(new View.OnClickListener()   {
+                public void onClick(View v)  {
+                    pieces.get(getPieceIDAt(move)).type = "knight";
+                    buttonLayout.setVisibility(View.GONE);
+                    moveDisabled = false;
+                    changeTurn();
+                }
+            });
+            bishopButton.setOnClickListener(new View.OnClickListener()   {
+                public void onClick(View v)  {
+                    pieces.get(getPieceIDAt(move)).type = "bishop";
+                    buttonLayout.setVisibility(View.GONE);
+                    moveDisabled = false;
+                    changeTurn();
+                }
+            });
+            queenButton.setOnClickListener(new View.OnClickListener()   {
+                public void onClick(View v)  {
+                    pieces.get(getPieceIDAt(move)).type = "queen";
+                    buttonLayout.setVisibility(View.GONE);
+                    moveDisabled = false;
+                    changeTurn();
+                }
+            });
+        }
+        else {
+            return false;
+        }
+        return true;
+    }
+
+
+    /***/
+    private void changeTurn(){
+        updatePieces();
+
+
+        //**********************************//
+        //THIS IS WHERE THE TURN IS CHANGED
+        //**********************************//
+        game.changeTurn();
+        checkIfCheckMate();
+        pushGame(game);
+    }
+
+
+    /**
      * Load in gameinfo based on GameObject fetched from server
      * */
-    private void loadInGame(GameObject game){
+    private void loadInGame(){
 
         //Load in names and quotes
         if(game.getPlayerOne().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())){
@@ -425,7 +524,6 @@ public class GameBoard extends AppCompatActivity {
     }
 
 
-
     private void keepGameUpdated(){
         //whenever a query with this valueEventListener is called it runs the sequence below
         valueEventListener = new ValueEventListener() {
@@ -442,7 +540,7 @@ public class GameBoard extends AppCompatActivity {
                     game.setLastMoveDate(fetchedGame.getLastMoveDate());
                     game.setRoundNumb(fetchedGame.getRoundNumb());
 
-                    loadInGame(game);
+                    loadInGame();
                     updatePieces();
 
                 }
@@ -466,7 +564,6 @@ public class GameBoard extends AppCompatActivity {
      * Check if game has been updated and if so updates database
      * */
     private void pushGame(GameObject game){
-//TODO create push string
         StringBuilder pushStringBuilder = new StringBuilder();
 
         //Start by filling out the whole string with 00:s
