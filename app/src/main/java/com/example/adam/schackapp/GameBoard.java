@@ -206,7 +206,7 @@ public class GameBoard extends AppCompatActivity {
      * */
     private void onPressedTile(int selectedTile){
         //Return if it is the opponents turn
-        if((game.getPlayerOne().equals(opponentName) && game.getGameStatus() == 1 )|| game.getPlayerTwo().equals(opponentName) && game.getGameStatus() == 2 || moveDisabled){
+        if((game.getPlayerOne().equals(opponentName) && game.getGameStatus() == 1 )|| (game.getPlayerTwo().equals(opponentName) && game.getGameStatus() == 2) || moveDisabled || gameStatus == 0){
             return;
         }
 
@@ -353,11 +353,15 @@ public class GameBoard extends AppCompatActivity {
     private void checkIfCheckMate(){
         for(Piece piece : pieces){
             if((piece.color.equals("white") && game.getGameStatus()==1) || piece.color.equals("black") && game.getGameStatus()==2){
-                Integer[] moves = piece.getMoves(pieces, amountOfTiles, 1);
-                if(moves.length != 0){return;}
+                Integer[] moveOptions = piece.getMoves(pieces, amountOfTiles, -1);
+
+                for (Integer move : moveOptions){
+                    System.out.println("NO CHECKMATE, FOUND MOVE FOR PIECE AT POSITION: " + piece.currentPosition + " OF TYPE: " + piece.type + " TO POSITION: " + move);
+                    return;
+                }
             }
         }
-        game.setGameStatus(0);
+       game.setGameStatus(0);
     }
 
     private boolean checkPawnPromotion(final int move){

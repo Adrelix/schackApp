@@ -95,6 +95,7 @@ public class Piece {
         }
 
         Integer[] array = possibleMoves.toArray(new Integer[0]);        //Translates the ArrayList into an array and returns it
+
         return array;
 
     }
@@ -402,7 +403,7 @@ public class Piece {
             if(!pieces.get(i).color.equals(color)){
                 Integer[] enemyMoves = pieces.get(i).getMoves(pieces, boardSize, kingPos);
                 for (Integer enemyMove: enemyMoves) {
-                    System.out.println("ENEMYMOVE BY: "+ pieces.get(i).type + " AT: " + enemyMove + " KINGPOS: " + kingPos + " CURRENTPOS: " + currentPosition);
+                    //System.out.println("ENEMYMOVE BY: "+ pieces.get(i).type + " AT: " + enemyMove + " KINGPOS: " + kingPos + " CURRENTPOS: " + currentPosition);
                     //if one of them is a king-killing move, function returns true
                     if(enemyMove.equals(kingPos) && move != pieces.get(i).currentPosition){
                         currentPosition = savedPosition;
