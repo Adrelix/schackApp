@@ -1,6 +1,14 @@
 package com.example.adam.schackapp;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -46,11 +54,7 @@ public class MainActivity extends AppCompatActivity {
         databaseProfiles = FirebaseDatabase.getInstance().getReference("profiles");
         databaseGames = FirebaseDatabase.getInstance().getReference("games");
         playerName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-
-
         profile = (ProfileObject) getIntent().getSerializableExtra("profileToLoad");
-        playerQuote = profile.getQuote();
-
 
         getGames();
 
@@ -79,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
                     for(int i = 0; i < GameList.size(); i++){
                         if(GameList.get(i).getGameID().equals(fetchedGame.getGameID())){
                             GameList.remove(i);
+                            if(playerName.equals(fetchedGame.getPlayerOne()) && fetchedGame.getGameStatus() == 2){
+                                notification(fetchedGame.getPlayerTwo() + " has made their move!");
+                            }
+                            else if(playerName.equals(fetchedGame.getPlayerTwo()) && fetchedGame.getGameStatus() == 1) {notification(fetchedGame.getPlayerOne() + " has made their move!");}
                         }
                     }
                     GameList.add(fetchedGame);
@@ -183,6 +191,56 @@ public class MainActivity extends AppCompatActivity {
         //TODO
     }
 
+    /**
+     * A pretty simple notification function, sends a message to the user but only works if app is running or currently in background
+     * TODO replace with a server that checks whenever a move is made and if so sends a push notification
+     * */
+    public void notification(String message){
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel("n", "n", NotificationManager.IMPORTANCE_HIGH);
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "n")
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setSmallIcon(R.drawable.white_knight)
+                .setWhen(System.currentTimeMillis())
+                .setContentTitle(message)
+                .setAutoCancel(true)
+                .setContentIntent(contentIntent)
+                .setContentText("It's your turn!");
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+        managerCompat.notify(999, builder.build());
+
+
+
+
+
+/*
+        NotificationCompat.Builder b = new NotificationCompat.Builder(this);
+
+        b.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.white_knight)
+                .setTicker("Hearty365")
+                .setContentTitle("Default notification")
+                .setContentText("Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+                .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_SOUND)
+                .setContentIntent(contentIntent)
+                .setContentInfo("Info");
+
+
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, b.build()); */
+    }
 
     /*
      * Sort the current GameList after lastMoveDate

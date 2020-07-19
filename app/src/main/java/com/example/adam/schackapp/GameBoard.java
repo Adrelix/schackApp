@@ -55,13 +55,6 @@ public class GameBoard extends AppCompatActivity {
     Query query;
 
     String opponentName;
-    String gameID;
-    int gameStatus;
-    String lastMoveDate;
-    String lastPiecePosition;
-    String piecePosition;
-    int roundNumb;
-    String startDate;
     String opponentQuote;
 
     //Custom info
@@ -77,8 +70,6 @@ public class GameBoard extends AppCompatActivity {
     String playerColor;          //indicates whos turn it is, default white
     int prevSelectedTile = -1;                  //shows the index of previously selected tiles, neg number for none selected
     boolean moveDisabled = false;
-
-    int loopVar; //TODO get this disgrace out of the code
 
     FirebaseDatabase database;
     DatabaseReference databaseProfiles;
@@ -206,7 +197,8 @@ public class GameBoard extends AppCompatActivity {
      * */
     private void onPressedTile(int selectedTile){
         //Return if it is the opponents turn
-        if((game.getPlayerOne().equals(opponentName) && game.getGameStatus() == 1 )|| (game.getPlayerTwo().equals(opponentName) && game.getGameStatus() == 2) || moveDisabled || gameStatus == 0){
+        if((game.getPlayerOne().equals(opponentName) && game.getGameStatus() == 1 )|| (game.getPlayerTwo().equals(opponentName) && game.getGameStatus() == 2) || moveDisabled || game.getGameStatus() == 0){
+            System.out.println("CAN'T PRESS TILE, moveDisabled: " + moveDisabled + " GameStatus: " + game.getGameStatus());
             return;
         }
 
@@ -365,11 +357,13 @@ public class GameBoard extends AppCompatActivity {
     }
 
     private boolean checkPawnPromotion(final int move){
+        System.out.println("CHECKING PAWN PROMOTION");
         if((move < 8 && pieces.get(getPieceIDAt(move)).type.equals("pawn") &&
                 pieces.get(getPieceIDAt(move)).color.equals("black")) ||
                 move >= amountOfTiles-8 && pieces.get(getPieceIDAt(move)).type.equals("pawn") &&
                         pieces.get(getPieceIDAt(move)).color.equals("white") ){
 
+            System.out.println("INSIDE PAWN PROMOTION");
             moveDisabled = true;
 
             final LinearLayout buttonLayout = (LinearLayout) findViewById(R.id.buttonLayout);

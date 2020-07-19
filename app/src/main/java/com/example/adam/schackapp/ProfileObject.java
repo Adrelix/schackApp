@@ -3,11 +3,11 @@ package com.example.adam.schackapp;
 import java.io.Serializable;
 
 public class ProfileObject implements Serializable {
-    String profileID;
-    String name;
-    String password;
-    String email;
-    String quote = "Jag är inte cool nog för att ha fått min quote fixad";
+    private String profileID;
+    private String name;
+    private String password;
+    private String email;
+    private String quote = "Jag är inte cool nog för att ha fått min quote fixad";
 
     public ProfileObject(){
 

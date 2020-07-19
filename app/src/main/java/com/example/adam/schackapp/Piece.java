@@ -35,7 +35,7 @@ public class Piece {
         }
         for (Piece piece : pieces) {
             if(piece.currentPosition>0) {       //make sure piece still on the board
-                if (piece.color == color) {
+                if (piece.color.equals(color)) {
                     allPiecesPosition[piece.currentPosition] = 1;
                 }//check if piece is friend or foe and sets value
                 else {
@@ -44,7 +44,7 @@ public class Piece {
             }
         }
         if(status>=0){
-            allPiecesPosition[status] = 0;
+            allPiecesPosition[status] = 2;
         }
 
 
@@ -402,10 +402,17 @@ public class Piece {
         for (int i = 0; i < pieces.size(); i++){
             if(!pieces.get(i).color.equals(color)){
                 Integer[] enemyMoves = pieces.get(i).getMoves(pieces, boardSize, kingPos);
+
+                if(pieces.get(i).currentPosition == 69){
+                    for (Integer enemyMove: enemyMoves) {
+                        System.out.println("FUCKING ENEMYMOVE BY: "+ pieces.get(i).type + " AT: " + pieces.get(i).currentPosition + " TO: " + enemyMove + " KINGPOS: " + kingPos + " CURRENTPOS: " + currentPosition);
+                }}
+
                 for (Integer enemyMove: enemyMoves) {
-                    //System.out.println("ENEMYMOVE BY: "+ pieces.get(i).type + " AT: " + enemyMove + " KINGPOS: " + kingPos + " CURRENTPOS: " + currentPosition);
+                    //System.out.println("ENEMYMOVE BY: "+ pieces.get(i).type + " AT: " + pieces.get(i).currentPosition + " TO: " + enemyMove + " KINGPOS: " + kingPos + " CURRENTPOS: " + currentPosition);
                     //if one of them is a king-killing move, function returns true
                     if(enemyMove.equals(kingPos) && move != pieces.get(i).currentPosition){
+                     //   System.out.println("KING KILLING MOVE BY: " + pieces.get(i).type + " AT POS: " + pieces.get(i).currentPosition);
                         currentPosition = savedPosition;
                         return true;
                     }
