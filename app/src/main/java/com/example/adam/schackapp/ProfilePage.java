@@ -48,9 +48,9 @@ public class ProfilePage extends AppCompatActivity {
         sharedPrefEditor.remove("storedEmail").commit();
         FirebaseAuth.getInstance().signOut();
         Intent newIntent = new Intent(this, LoginScreen.class);
-        newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(newIntent);
+        finish();
 
     }
 
