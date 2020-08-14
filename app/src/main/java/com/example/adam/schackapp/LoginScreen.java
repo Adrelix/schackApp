@@ -3,6 +3,7 @@ package com.example.adam.schackapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -49,10 +50,11 @@ public class LoginScreen extends AppCompatActivity {
 
 
         //Store user information in sharedpref
-        sharedPreferences = getPreferences(MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("SHARED_PREFS", MODE_PRIVATE);
         sharedPrefEditor = sharedPreferences.edit();
         String storedEmail = sharedPreferences.getString("storedEmail", "");
         String storedPassword = sharedPreferences.getString("storedPassword", "");
+        //Toast.makeText(getApplicationContext(), "storedEmail: " + storedEmail + "\n storedPassword: " + storedPassword, Toast.LENGTH_LONG).show();
         EditText writtenEmail = (EditText) findViewById(R.id.profile_name);
         EditText writtenPw = (EditText) findViewById(R.id.profile_password);
         writtenEmail.setText(storedEmail);
@@ -99,11 +101,11 @@ public class LoginScreen extends AppCompatActivity {
         if(!TextUtils.isEmpty(attemptedEmail) && !TextUtils.isEmpty(attemptedPassword)) {
 
             //Use Firebase Authentication to sign in user
-            mAuth.signInWithEmailAndPassword(attemptedEmail, attemptedPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            mAuth.signInWithEmailAndPassword(attemptedEmail.toLowerCase(), attemptedPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Welcome back\n" + FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), Toast.LENGTH_LONG).show();
+                       Toast.makeText(getApplicationContext(), "Welcome back\n" + FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), Toast.LENGTH_LONG).show();
 
 
                         //Get profile information from database
@@ -114,8 +116,8 @@ public class LoginScreen extends AppCompatActivity {
                                     for(DataSnapshot dbsnap : dataSnapshot.getChildren()){ //TODO atm it read through the whole list even tho it's a single element list, should be fixed
                                         userProfile = dbsnap.getValue(ProfileObject.class);        //Assert the fetched data to a profile object
                                     }
-                                    sharedPrefEditor.putString("storedEmail", attemptedEmail);
-                                    sharedPrefEditor.putString("storedPassword", attemptedPassword);          //TODO encrypt this or smth
+                                    sharedPrefEditor.putString("storedEmail", attemptedEmail).apply();
+                                    sharedPrefEditor.putString("storedPassword", attemptedPassword).apply();          //TODO encrypt this or smth
                                     sharedPrefEditor.commit();
 
 
@@ -144,7 +146,10 @@ public class LoginScreen extends AppCompatActivity {
                         sharedPrefEditor.remove("storedPassword");
                         sharedPrefEditor.remove("storedEmail");
                         sharedPrefEditor.commit();
-                        Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Button login = (Button) findViewById(R.id.login);
+                        Button register = (Button) findViewById(R.id.register_new);
+                        login.setEnabled(true);
+                        register.setEnabled(true);
                     }
                 }
             });

@@ -66,16 +66,22 @@ public class NewGameSettings extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){                          //Check that the user exist in the database
                     ProfileObject opponent = null;
-                    for(DataSnapshot dbsnap : dataSnapshot.getChildren()){ //TODO atm it read through the whole list even tho it's a single element list, should be fixed
+                    for(DataSnapshot dbsnap : dataSnapshot.getChildren()){
                         opponent = dbsnap.getValue(ProfileObject.class);        //Assert the fetched data to a profile object
-                    }
-                    Toast.makeText(NewGameSettings.this, "Found user: " + opponent.getName(), Toast.LENGTH_SHORT).show();
 
-                    //TODO Create game with both users
-                    String createdID = databaseGames.push().getKey();           //Get next item ID
-                    GameObject newGame = new GameObject(createdID, playerName, opponentName, profile.getQuote(), opponent.getQuote(), currentDate, 3);
-                    databaseGames.child(createdID).setValue(newGame);                                     //Add Profile to database
-                    finish();
+                    }
+
+                    if(!playerName.equals(opponentName)){
+                        Toast.makeText(NewGameSettings.this, "Found user: " + opponent.getName(), Toast.LENGTH_SHORT).show();
+                        //TODO Create game with both users
+                        String createdID = databaseGames.push().getKey();           //Get next item ID
+                        GameObject newGame = new GameObject(createdID, playerName, opponentName, profile.getQuote(), opponent.getQuote(), currentDate, 3);
+                        databaseGames.child(createdID).setValue(newGame);                                     //Add Profile to database
+                        finish();
+                    }
+                    else{
+                        Toast.makeText(NewGameSettings.this, "You can't start a game against yourself!", Toast.LENGTH_SHORT).show();
+                    }
 
                 }
                 else{       //If user couldn't be found
@@ -89,9 +95,8 @@ public class NewGameSettings extends AppCompatActivity {
         };
 
 
-        Query query = FirebaseDatabase.getInstance().getReference("profiles").orderByChild("name").equalTo(opponentName);      //Fetch all profiles that match the attemptedname
-
-        query.addValueEventListener(valueEventListener);
+        Query queryProfiles = databaseProfiles.orderByChild("name").equalTo(opponentName);      //Fetch all profiles that match the attemptedname
+        queryProfiles.addValueEventListener(valueEventListener);
 
     }
 

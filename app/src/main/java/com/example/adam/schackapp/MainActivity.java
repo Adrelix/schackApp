@@ -1,20 +1,11 @@
 package com.example.adam.schackapp;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -25,9 +16,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.text.*;
-import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -83,10 +71,13 @@ public class MainActivity extends AppCompatActivity {
                     for(int i = 0; i < GameList.size(); i++){
                         if(GameList.get(i).getGameID().equals(fetchedGame.getGameID())){
                             GameList.remove(i);
-                            if(playerName.equals(fetchedGame.getPlayerOne()) && fetchedGame.getGameStatus() == 2){
+                            //TODO implement an actual working notification system
+                            /*if(playerName.equals(fetchedGame.getPlayerOne()) && fetchedGame.getGameStatus() == 1){
                                 notification(fetchedGame.getPlayerTwo() + " has made their move!");
                             }
-                            else if(playerName.equals(fetchedGame.getPlayerTwo()) && fetchedGame.getGameStatus() == 1) {notification(fetchedGame.getPlayerOne() + " has made their move!");}
+                            else if(playerName.equals(fetchedGame.getPlayerTwo()) && fetchedGame.getGameStatus() == 2) {
+                                notification(fetchedGame.getPlayerOne() + " has made their move!");
+                            }       */
                         }
                     }
                     GameList.add(fetchedGame);
@@ -184,7 +175,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void profile(View view){
-        //TODO
+        //Send the information to the next activity
+        Intent intent = new Intent(getApplicationContext(), ProfilePage.class);
+        intent.putExtra("profileToLoad", profile);
+        startActivity(intent);
     }
 
     public void rules(View view){
@@ -195,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
      * A pretty simple notification function, sends a message to the user but only works if app is running or currently in background
      * TODO replace with a server that checks whenever a move is made and if so sends a push notification
      * */
-    public void notification(String message){
+   /* public void notification(String message){
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -239,8 +233,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, b.build()); */
-    }
+        notificationManager.notify(1, b.build()); /asterix här/
+    }*/
 
     /*
      * Sort the current GameList after lastMoveDate

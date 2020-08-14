@@ -103,7 +103,7 @@ public class RegisterNewProfile extends AppCompatActivity {
 
 
         //The more advanced built in firebase authentication
-        mAuth.createUserWithEmailAndPassword(attemptedEmail, attemptedPw).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(attemptedEmail.toLowerCase(), attemptedPw).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
@@ -121,7 +121,7 @@ public class RegisterNewProfile extends AppCompatActivity {
                             });
 
 
-                    //Old method to create profile, used the database and not the auth function of firebase, still kinda useful as it saves username
+                    //Old method to create profile, used the database and not the auth function of firebase, still kinda useful as it saves username as key and other information with it
                     createdID = databaseProfiles.push().getKey();           //Get next item ID
                     ProfileObject newProfile = new ProfileObject(createdID, attemptedName, attemptedPw, attemptedEmail);    //Create profile object
                     databaseProfiles.child(createdID).setValue(newProfile);                                     //Add Profile to database
