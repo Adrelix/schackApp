@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     Button yourTurnButton;
     Button opponentTurnButton;
     Button finishedGameButton;
+    Button plusButton;
 
     DatabaseReference databaseProfiles;
     DatabaseReference databaseGames;
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         yourTurnButton = (Button) findViewById(R.id.midNavBarActiveGames);
         opponentTurnButton = (Button) findViewById(R.id.midNavBarOpponentGames);
         finishedGameButton = (Button) findViewById(R.id.midNavBarDoneGames);
+        plusButton = (Button) findViewById(R.id.plusButton);
 
         yourTurnButton.setOnClickListener(new View.OnClickListener()   {
             public void onClick(View v)  {
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 yourTurnButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
                 opponentTurnButton.setForeground(null);
                 finishedGameButton.setForeground(null);
+                plusButton.setVisibility(View.VISIBLE);
                 updateGameList();
             }
         });
@@ -73,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 yourTurnButton.setForeground(null);
                 opponentTurnButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
                 finishedGameButton.setForeground(null);
+                plusButton.setVisibility(View.GONE);
                 updateGameList();
             }
         });
@@ -82,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 yourTurnButton.setForeground(null);
                 opponentTurnButton.setForeground(null);
                 finishedGameButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
+                plusButton.setVisibility(View.GONE);
                 updateGameList();
             }
         });
