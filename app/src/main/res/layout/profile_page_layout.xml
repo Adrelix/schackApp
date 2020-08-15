@@ -2,20 +2,39 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ProfilePage"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gray_gradiant">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+    <android.support.v7.widget.CardView
+        android:id="@+id/midNavBarCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:cardBackgroundColor="@color/cardview_shadow_end_color"
+        app:cardCornerRadius="75dp"
+        app:cardElevation="20dp"
+        app:cardPreventCornerOverlap="true"
         app:layout_constraintBottom_toTopOf="@+id/playerTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/p10"
-        app:srcCompat="@drawable/empty_profile_image" />
+        app:layout_constraintTop_toBottomOf="@+id/p10">
+
+
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/empty_profile_image" />
+
+    </android.support.v7.widget.CardView>
 
     <TextView
         android:id="@+id/p10"
@@ -59,29 +78,29 @@
         android:id="@+id/playerTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="Player Title"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/midNavBarCard"
+        app:layout_constraintStart_toStartOf="@+id/midNavBarCard"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.39" />
 
     <TextView
         android:id="@+id/playerQuote"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Example quote that shows just how toxic the player is"
+        android:layout_marginEnd="32dp"
+        android:text='"Example quote that shows just how toxic the player is"'
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="@+id/gamesPlayerAnswer"
-        app:layout_constraintStart_toStartOf="@+id/gamesPlayed"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        app:layout_constraintEnd_toEndOf="@+id/midNavBarCard"
+        app:layout_constraintStart_toStartOf="@+id/midNavBarCard"
         app:layout_constraintTop_toBottomOf="@+id/playerTitle" />
 
     <TextView
@@ -92,7 +111,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="Games Played:"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        app:layout_constraintBottom_toTopOf="@+id/botNavBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
@@ -105,6 +125,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Games Won:"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintStart_toStartOf="@+id/gamesPlayed"
         app:layout_constraintTop_toBottomOf="@+id/gamesPlayed" />
 
@@ -114,6 +135,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Games Lost:"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintStart_toStartOf="@+id/gamesWon"
         app:layout_constraintTop_toBottomOf="@+id/gamesWon" />
 
@@ -123,6 +145,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Win Rate: "
+        android:textColor="@color/common_google_signin_btn_text_dark_pressed"
         app:layout_constraintStart_toStartOf="@+id/gamesLost"
         app:layout_constraintTop_toBottomOf="@+id/gamesLost" />
 
@@ -132,14 +155,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="8dp"
         android:onClick="signOut"
         android:text="@string/sign_out"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/botNavBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/winrate"
-        app:layout_constraintVertical_bias="0.8" />
+        app:layout_constraintTop_toBottomOf="@+id/winrate" />
 
     <TextView
         android:id="@+id/gamesPlayerAnswer"
@@ -148,6 +170,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:text="1337"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
@@ -159,6 +182,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="420"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintEnd_toEndOf="@+id/gamesPlayerAnswer"
         app:layout_constraintTop_toBottomOf="@+id/gamesPlayerAnswer" />
 
@@ -168,6 +192,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="69"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintEnd_toEndOf="@+id/gamesWonAnswer"
         app:layout_constraintTop_toBottomOf="@+id/gamesWonAnswer" />
 
@@ -177,7 +202,49 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="69.7%"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintEnd_toEndOf="@+id/gamesLostAnswer"
         app:layout_constraintTop_toBottomOf="@+id/gamesLostAnswer" />
+
+    <View
+        android:id="@+id/botNavBarDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@+id/botNavBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/botNavBar"
+        android:layout_width="0dp"
+        android:layout_height="53dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/botNavBarProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/background_gray_gradiant"
+            app:srcCompat="@drawable/profile_logo" />
+
+        <ImageView
+            android:id="@+id/botNavBarHome"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/home_logo" />
+
+        <ImageView
+            android:id="@+id/botNavBarRules"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/rules_logo" />
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -4,7 +4,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -12,7 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class ProfilePage extends AppCompatActivity {
     ProfileObject profile;
     String playerName;
-
+    int imageHeight;
 
 
     @Override
@@ -27,13 +31,44 @@ public class ProfilePage extends AppCompatActivity {
         TextView gamesLostAnswer = findViewById(R.id.gamesLostAnswer);
         TextView winRateAnswer = findViewById(R.id.winrateAnswer);
         TextView playerQuote = findViewById(R.id.playerQuote);
+        TextView playerNameView = findViewById(R.id.playerTitle);
 
         gamesPlayedAnswer.setText(profile.getAmountOfGames()+ "");
         gamesWonAnswer.setText(profile.getAmountOfWins()+ "");
         gamesLostAnswer.setText(profile.getAmountOfGames()-profile.getAmountOfWins() + "");
         String winRate = "" + (double) profile.getAmountOfWins()/ (double) profile.getAmountOfGames();
         winRateAnswer.setText(winRate);
-        playerQuote.setText(profile.getQuote());
+        playerQuote.setText("\"" + profile.getQuote() + "\"");
+        playerNameView.setText(playerName);
+
+
+        //method to resize profile image
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int imageWidth = displayMetrics.widthPixels/3;
+        ImageView profileImageView = findViewById(R.id.profile_image);
+        profileImageView.getLayoutParams().height = imageWidth;
+        profileImageView.getLayoutParams().width = imageWidth;
+        profileImageView.requestLayout();
+
+
+
+        //method to round profile image
+        final CardView image_card = findViewById(R.id.midNavBarCard);
+        ViewTreeObserver viewTreeObserver = image_card.getViewTreeObserver();
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    int viewHeight = image_card.getHeight();
+                    if (viewHeight != 0) {
+                        image_card.setRadius(viewHeight/2);
+                        image_card.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+            });
+        }
+
 
 
 
