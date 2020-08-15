@@ -25,6 +25,10 @@ public class MainActivity extends AppCompatActivity {
     String playerName;
     String playerQuote;
 
+    String currentSelectedList;
+    Button yourTurnButton;
+    Button opponentTurnButton;
+    Button finishedGameButton;
 
     DatabaseReference databaseProfiles;
     DatabaseReference databaseGames;
@@ -46,11 +50,41 @@ public class MainActivity extends AppCompatActivity {
         playerName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         profile = (ProfileObject) getIntent().getSerializableExtra("profileToLoad");
 
+        currentSelectedList = "yourTurn";
         getGames();
 
 
+        yourTurnButton = (Button) findViewById(R.id.midNavBarActiveGames);
+        opponentTurnButton = (Button) findViewById(R.id.midNavBarOpponentGames);
+        finishedGameButton = (Button) findViewById(R.id.midNavBarDoneGames);
 
-
+        yourTurnButton.setOnClickListener(new View.OnClickListener()   {
+            public void onClick(View v)  {
+                currentSelectedList = "yourTurn";
+                yourTurnButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
+                opponentTurnButton.setForeground(null);
+                finishedGameButton.setForeground(null);
+                updateGameList();
+            }
+        });
+        opponentTurnButton.setOnClickListener(new View.OnClickListener()   {
+            public void onClick(View v)  {
+                currentSelectedList = "opponentTurn";
+                yourTurnButton.setForeground(null);
+                opponentTurnButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
+                finishedGameButton.setForeground(null);
+                updateGameList();
+            }
+        });
+        finishedGameButton.setOnClickListener(new View.OnClickListener()   {
+            public void onClick(View v)  {
+                currentSelectedList = "finishedGame";
+                yourTurnButton.setForeground(null);
+                opponentTurnButton.setForeground(null);
+                finishedGameButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
+                updateGameList();
+            }
+        });
 
     }
 
@@ -85,56 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     GameList.add(fetchedGame);
                 }
 
-                String[] playerTitle = new String[GameList.size()];
-                String[] subMessage = new String[GameList.size()];
-                Integer[] imgArray = new Integer[GameList.size()];
-
-                //Add each game in the GameList to the information that goes into the adapter
-                System.out.println("CREATING GAME LIST");
-                for(int i = 0; i < GameList.size(); i++){
-
-                    //Change the info to make sense dependent if player is playerOne or playerTwo
-                    //If player = playerOne TODO snygga till det här smh
-                    if(playerName.equals(GameList.get(i).getPlayerTwo())){
-                        playerTitle[i] = GameList.get(i).getPlayerOne();
-                        if(GameList.get(i).getGameStatus() == 2){
-                            subMessage[i] = "Your turn!";
-                        }
-                        else {
-                            subMessage[i] = "Waiting for their move...";
-                        }
-                    }
-                    //If player = playerTwo
-                    else{playerTitle[i] = GameList.get(i).getPlayerTwo();
-                        if(GameList.get(i).getGameStatus() == 1){
-                            subMessage[i] = "Your turn!";
-                        }
-                        else {
-                            subMessage[i] = "Waiting for their move...";
-                        }
-                    }
-
-                    if(GameList.get(i).getGameStatus() == 0){
-                        subMessage[i] = "Game is over";
-                    }
-                    //TODO implement lol
-                    imgArray[i] = R.drawable.empty_profile_image;
-                }
-
-
-                //TODO sort GameList based on lastmove here
-
-
-                //Takes in the list of desired attributes, sends them to an adapter and then puts them in a list, creating the current games list
-                GameItemListAdapter adapter=new GameItemListAdapter(MainActivity.this, playerTitle, subMessage, imgArray);
-                ListView list=(ListView) findViewById(R.id.game_list);
-                list.setAdapter(adapter);                                                                           //Adds all loaded in gamelistitems
-                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {                                 //what happens after an item is pressed
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        startGame(view, GameList.get(position));
-                    }
-                });
+                updateGameList();
 
             }
 
@@ -161,10 +146,93 @@ public class MainActivity extends AppCompatActivity {
      * */
     public void newGame(View view){
         Intent intent = new Intent(MainActivity.this, NewGameSettings.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra("profileToLoad", profile);
         startActivity(intent);
 
     }
+
+
+    /**
+     * Updates the displayed gamelist based on currently selected option
+     * and games in database
+     * */
+    public void updateGameList(){
+
+        ArrayList<Integer> indexList = new ArrayList<>();
+
+
+        //Sort the list into sublist dependent on currentSelectedList
+        for(Integer i = 0; i < GameList.size(); i++){
+
+            switch (currentSelectedList){
+                case "yourTurn":
+                    if(GameList.get(i).getGameStatus() == 1 && playerName.equals(GameList.get(i).getPlayerOne())){
+                        indexList.add(i);
+                    }
+                    else if(GameList.get(i).getGameStatus() == 2 && playerName.equals(GameList.get(i).getPlayerTwo())){
+                        indexList.add(i);
+                    }
+                    break;
+
+                case "opponentTurn":
+                    if(GameList.get(i).getGameStatus() == 2 && playerName.equals(GameList.get(i).getPlayerOne())){
+                        indexList.add(i);
+                    }
+                    else if(GameList.get(i).getGameStatus() == 1 && playerName.equals(GameList.get(i).getPlayerTwo())){
+                        indexList.add(i);
+                    }
+                    break;
+
+                case "finishedGame":
+                    if(GameList.get(i).getGameStatus() == 0 ){
+                        indexList.add(i);
+                    }
+                    break;
+            }
+        }
+
+
+
+
+        String[] playerTitle = new String[indexList.size()];
+        String[] subMessage = new String[indexList.size()];
+        Integer[] imgArray = new Integer[indexList.size()];
+
+        //Add each game in the GameList to the information that goes into the adapter
+        for(int i = 0; i < indexList.size(); i++){
+
+            //Change the info to make sense dependent if player is playerOne or playerTwo
+            //If player = playerOne else player = playerTwo
+            if(playerName.equals(GameList.get(indexList.get(i)).getPlayerTwo())){
+                playerTitle[i] = GameList.get(indexList.get(i)).getPlayerOne();
+            } else{
+                playerTitle[i] = GameList.get(indexList.get(i)).getPlayerTwo();
+            }
+
+            subMessage[i] = "20" + GameList.get(indexList.get(i)).getLastMoveDate();
+            //TODO implement lol
+            imgArray[i] = R.drawable.empty_profile_image;
+        }
+
+
+        //TODO sort GameList based on lastmove here
+
+
+        //Takes in the list of desired attributes, sends them to an adapter and then puts them in a list, creating the current games list
+        GameItemListAdapter adapter=new GameItemListAdapter(MainActivity.this, playerTitle, subMessage, imgArray);
+        ListView list=(ListView) findViewById(R.id.game_list);
+        list.setAdapter(adapter);                                                                           //Adds all loaded in gamelistitems
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {                                 //what happens after an item is pressed
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startGame(view, GameList.get(position));
+            }
+        });
+
+
+    }
+
 
     /**
      * Starts an existing game
@@ -172,18 +240,24 @@ public class MainActivity extends AppCompatActivity {
     public void startGame(View view, GameObject game){
         Intent intent = new Intent(MainActivity.this, GameBoard.class);
         intent.putExtra("gameToLoad", game);
+        intent.putExtra("profileToLoad", profile);
         startActivity(intent);
     }
 
     public void profile(View view){
         //Send the information to the next activity
         Intent intent = new Intent(getApplicationContext(), ProfilePage.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION );
         intent.putExtra("profileToLoad", profile);
         startActivity(intent);
     }
 
     public void rules(View view){
-        //TODO
+        //Send the information to the next activity
+        Intent intent = new Intent(getApplicationContext(), RulesPage.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION );
+        intent.putExtra("profileToLoad", profile);
+        startActivity(intent);
     }
 
     /**

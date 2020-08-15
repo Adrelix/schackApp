@@ -19,9 +19,18 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameBoard"></activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/noAnimTheme"
+            />
+        <activity
+            android:name=".RulesPage"
+            android:theme="@style/noAnimTheme"
+            android:noHistory="true"
+            />
         <activity
             android:name=".RegisterNewProfile"
+            android:theme="@style/noAnimTheme"
             android:noHistory="true"
             />
         <activity
@@ -31,6 +40,7 @@
             />
         <activity
             android:name=".ProfilePage"
+            android:theme="@style/noAnimTheme"
             android:noHistory="true"
             />
 

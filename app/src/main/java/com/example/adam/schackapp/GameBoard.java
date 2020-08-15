@@ -71,6 +71,8 @@ public class GameBoard extends AppCompatActivity {
     int prevSelectedTile = -1;                  //shows the index of previously selected tiles, neg number for none selected
     boolean moveDisabled = false;
 
+    ProfileObject profile;
+
     FirebaseDatabase database;
     DatabaseReference databaseProfiles;
     DatabaseReference databaseGames;
@@ -80,6 +82,7 @@ public class GameBoard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_board_layout);
+        profile = (ProfileObject) getIntent().getSerializableExtra("profileToLoad");
 
 
         //make the statusbar(maybe?) and bottom (android) navbar black
@@ -624,6 +627,12 @@ public class GameBoard extends AppCompatActivity {
     {
         super.onDestroy();
         database.getReference().child("games").removeEventListener(valueEventListener);
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra("profileToLoad", profile);
+        startActivity(intent);
+
     }
 
 }

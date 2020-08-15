@@ -89,4 +89,20 @@ public class ProfilePage extends AppCompatActivity {
 
     }
 
+    public void mainPage(View view){
+        //Send the information to the next activity
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("profileToLoad", profile);
+        startActivity(intent);
+    }
+
+    public void rules(View view){
+        //Send the information to the next activity
+        Intent intent = new Intent(getApplicationContext(), RulesPage.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra("profileToLoad", profile);
+        startActivity(intent);
+    }
+
 }
