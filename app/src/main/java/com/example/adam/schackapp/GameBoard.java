@@ -26,7 +26,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 
 
@@ -157,7 +160,8 @@ public class GameBoard extends AppCompatActivity {
 
                 //connecting button to tile
                 tiles[currTile].button = btnTag;
-                tiles[currTile].button.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                tiles[currTile].button.setAdjustViewBounds(true);
+                tiles[currTile].button.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
 
                 //adding button to row
@@ -356,6 +360,7 @@ public class GameBoard extends AppCompatActivity {
                 }
             }
         }
+        //TODO Increment both players amountOfGames and increase winners amountOfWins here
        game.setGameStatus(0);
     }
 
@@ -615,6 +620,9 @@ public class GameBoard extends AppCompatActivity {
         String pushString = pushStringBuilder.toString();
         game.setLastPiecePositions(game.getPiecePositions());
         game.setPiecePositions(pushString);
+        String currentDate = new SimpleDateFormat("yy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+        game.setLastMoveDate(currentDate);
+
 
         if(gameAtStart == game.hashCode()){
             databaseGames.child(game.getGameID()).setValue(game);

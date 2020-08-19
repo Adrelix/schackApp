@@ -20,82 +20,115 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
+
         <LinearLayout
-            android:id="@+id/linearlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
-
-            <android.support.constraint.ConstraintLayout
+            <android.support.v7.widget.CardView
+                android:id="@+id/midNavBarCard"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:cardBackgroundColor="@color/cardview_shadow_end_color"
+                app:cardElevation="20dp"
+                app:cardPreventCornerOverlap="true"
+                app:layout_constraintBottom_toTopOf="@+id/botNavBarDivider2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.48000002">
 
-                <ImageView
-                    android:id="@+id/navbarBackground"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:scaleType="fitXY"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/navbar_background" />
 
-                <ImageView
-                    android:id="@+id/playerPicture"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/navbarBackground"
-                    app:layout_constraintEnd_toEndOf="@id/navbarBackground"
-                    app:layout_constraintHorizontal_bias="0.25"
-                    app:layout_constraintStart_toStartOf="@+id/navbarBackground"
-                    app:layout_constraintTop_toTopOf="@+id/navbarBackground"
-                    app:srcCompat="@drawable/empty_profile_image" />
+                <LinearLayout
+                    android:id="@+id/header_linearlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#293b49"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/playerName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="Alex189650"
-                    android:textColor="?attr/colorBackgroundFloating"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/playerPicture"
-                    app:layout_constraintTop_toTopOf="@+id/playerPicture"
-                    app:layout_constraintVertical_bias="0.0" />
 
-                <TextView
-                    android:id="@+id/playerQuote"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text='"Ingen minns en fegis"'
-                    android:textColor="?attr/colorBackgroundFloating"
-                    app:layout_constraintStart_toEndOf="@+id/playerPicture"
-                    app:layout_constraintTop_toBottomOf="@+id/playerName" />
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/menyButton"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/playerPicture"
-                    app:layout_constraintStart_toStartOf="@+id/navbarBackground"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/hamburger_white" />
-            </android.support.constraint.ConstraintLayout>
+                        <ImageView
+                            android:id="@+id/navbarBackground"
+                            android:layout_width="0dp"
+                            android:layout_height="80dp"
+                            android:scaleType="fitXY"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/playerPicture"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/navbarBackground"
+                            app:layout_constraintEnd_toEndOf="@id/navbarBackground"
+                            app:layout_constraintHorizontal_bias="0.064"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/navbarBackground"
+                            app:layout_constraintVertical_bias="0.0"
+                            app:srcCompat="@drawable/empty_profile_image" />
+
+                        <TextView
+                            android:id="@+id/playerName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="Alex189650"
+                            android:textColor="?attr/colorBackgroundFloating"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/playerPicture"
+                            app:layout_constraintTop_toTopOf="@+id/playerPicture"
+                            app:layout_constraintVertical_bias="0.0" />
+
+                        <TextView
+                            android:id="@+id/playerQuote"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text='"Ingen minns en fegis"'
+                            android:textColor="?attr/colorBackgroundFloating"
+                            app:layout_constraintStart_toEndOf="@+id/playerPicture"
+                            app:layout_constraintTop_toBottomOf="@+id/playerName" />
+
+                    </android.support.constraint.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/botNavBarDivider4"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@android:color/darker_gray"
+                        app:layout_constraintBottom_toTopOf="@+id/botNavBar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/linearlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
