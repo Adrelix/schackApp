@@ -73,7 +73,7 @@
                             android:layout_marginBottom="8dp"
                             app:layout_constraintBottom_toBottomOf="@+id/navbarBackground"
                             app:layout_constraintEnd_toEndOf="@id/navbarBackground"
-                            app:layout_constraintHorizontal_bias="0.064"
+                            app:layout_constraintHorizontal_bias="0.06"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="@+id/navbarBackground"
                             app:layout_constraintVertical_bias="0.0"
@@ -106,15 +106,6 @@
 
                     </android.support.constraint.ConstraintLayout>
 
-                    <View
-                        android:id="@+id/botNavBarDivider4"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
-                        app:layout_constraintBottom_toTopOf="@+id/botNavBar"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
@@ -127,6 +118,14 @@
                 android:orientation="vertical">
 
 
+                <View
+                    android:id="@+id/botNavBarDivider4"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintBottom_toTopOf="@+id/botNavBar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
             </LinearLayout>
 
         </LinearLayout>

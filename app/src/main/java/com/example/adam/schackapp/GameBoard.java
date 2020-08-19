@@ -116,8 +116,8 @@ public class GameBoard extends AppCompatActivity {
 
         tiles = new Tiles[amountOfTiles];
         //Here we assert the resource used for the black and white tile
-        BLACK_TILE = R.drawable.black_tile2;
-        WHITE_TILE = R.drawable.white_tile2;
+        BLACK_TILE = R.drawable.black_tile3;
+        WHITE_TILE = R.drawable.white_tile3;
 
         //Get display width
         DisplayMetrics displayMetrics = new DisplayMetrics();
