@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.Editor sharedPrefEditor;
 
     ArrayList <GameObject> GameList = new ArrayList<GameObject>();
+    ArrayList<Integer> indexList;
 
 
 
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
      * */
     public void updateGameList(){
 
-        ArrayList<Integer> indexList = new ArrayList<>();
+        indexList = new ArrayList<>();
         Collections.sort(GameList);
 
         //Sort the list into sublist dependent on currentSelectedList
@@ -258,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {                                 //what happens after an item is pressed
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startGame(view, GameList.get(position));
+                startGame(view, GameList.get(indexList.get(position)));
             }
         });
 
