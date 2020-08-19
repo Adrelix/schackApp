@@ -49,6 +49,21 @@ public class LoginScreen extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
+        Button loginBtn = (Button) findViewById(R.id.login);
+        loginBtn.setOnClickListener(new View.OnClickListener()   {
+            public void onClick(View v)  {
+                loginButton();
+            }
+        });
+        Button registerBtn = (Button) findViewById(R.id.register_new);
+        registerBtn.setOnClickListener(new View.OnClickListener()   {
+            public void onClick(View v)  {
+                register();
+            }
+        });
+
+
+
         //Store user information in sharedpref
         sharedPreferences = getSharedPreferences("SHARED_PREFS", MODE_PRIVATE);
         sharedPrefEditor = sharedPreferences.edit();
@@ -59,20 +74,14 @@ public class LoginScreen extends AppCompatActivity {
         EditText writtenPw = (EditText) findViewById(R.id.profile_password);
         writtenEmail.setText(storedEmail);
         writtenPw.setText(storedPassword);
+
+        if(storedEmail.equals("") && storedPassword.equals("")){
+            loginBtn.setEnabled(true);
+            registerBtn.setEnabled(true);
+        }
+
         login(storedEmail, storedPassword);
 
-        Button loginBtn = (Button) findViewById(R.id.login);
-        loginBtn.setOnClickListener(new View.OnClickListener()   {
-            public void onClick(View v)  {
-               loginButton();
-            }
-        });
-        Button registerBtn = (Button) findViewById(R.id.register_new);
-        registerBtn.setOnClickListener(new View.OnClickListener()   {
-            public void onClick(View v)  {
-                register();
-            }
-        });
     }
 
 
@@ -141,6 +150,8 @@ public class LoginScreen extends AppCompatActivity {
 
 
                     } else {
+                        Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_LONG).show();
+
                         writtenEmail.setText("");
                         writtenPw.setText("");
                         sharedPrefEditor.remove("storedPassword");

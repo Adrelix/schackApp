@@ -1,6 +1,7 @@
 package com.example.adam.schackapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -34,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
     DatabaseReference databaseProfiles;
     DatabaseReference databaseGames;
+
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor sharedPrefEditor;
 
     ArrayList <GameObject> GameList = new ArrayList<GameObject>();
 
@@ -52,18 +58,37 @@ public class MainActivity extends AppCompatActivity {
         playerName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         profile = (ProfileObject) getIntent().getSerializableExtra("profileToLoad");
 
-        currentSelectedList = "yourTurn";
+
+        //Get last used settings and restore
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        sharedPrefEditor = sharedPreferences.edit();
+        currentSelectedList = sharedPreferences.getString("currentSelectedList", "yourTurn");
+
         getGames();
 
 
+        //Initiating middle navbar and setting the last pressed button to be activated
         yourTurnButton = (Button) findViewById(R.id.midNavBarActiveGames);
         opponentTurnButton = (Button) findViewById(R.id.midNavBarOpponentGames);
         finishedGameButton = (Button) findViewById(R.id.midNavBarDoneGames);
         plusButton = (Button) findViewById(R.id.plusButton);
+        switch (currentSelectedList){
+            case "yourTurn":
+                yourTurnButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
+                break;
+            case "opponentTurn":
+                opponentTurnButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
+                break;
+            case "finishedGame":
+                finishedGameButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
+                break;
+        }
 
+        //Activate the middle navbar and the functions of it
         yourTurnButton.setOnClickListener(new View.OnClickListener()   {
             public void onClick(View v)  {
                 currentSelectedList = "yourTurn";
+                sharedPrefEditor.putString("currentSelectedList", currentSelectedList).apply();
                 yourTurnButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
                 opponentTurnButton.setForeground(null);
                 finishedGameButton.setForeground(null);
@@ -74,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         opponentTurnButton.setOnClickListener(new View.OnClickListener()   {
             public void onClick(View v)  {
                 currentSelectedList = "opponentTurn";
+                sharedPrefEditor.putString("currentSelectedList", currentSelectedList).apply();
                 yourTurnButton.setForeground(null);
                 opponentTurnButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
                 finishedGameButton.setForeground(null);
@@ -84,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         finishedGameButton.setOnClickListener(new View.OnClickListener()   {
             public void onClick(View v)  {
                 currentSelectedList = "finishedGame";
+                sharedPrefEditor.putString("currentSelectedList", currentSelectedList).apply();
                 yourTurnButton.setForeground(null);
                 opponentTurnButton.setForeground(null);
                 finishedGameButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
@@ -95,7 +122,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Fetch users games from database and place them in to GameList. Uses realtime database so games are always up to date
+     * */
     public void getGames(){
 
         //whenever a query with this valueEventListener is called it runs the sequence below
@@ -166,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
     public void updateGameList(){
 
         ArrayList<Integer> indexList = new ArrayList<>();
-
+        Collections.sort(GameList);
 
         //Sort the list into sublist dependent on currentSelectedList
         for(Integer i = 0; i < GameList.size(); i++){
@@ -222,9 +251,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        //TODO sort GameList based on lastmove here
-
-
         //Takes in the list of desired attributes, sends them to an adapter and then puts them in a list, creating the current games list
         GameItemListAdapter adapter=new GameItemListAdapter(MainActivity.this, playerTitle, subMessage, imgArray);
         ListView list=(ListView) findViewById(R.id.game_list);
@@ -265,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("profileToLoad", profile);
         startActivity(intent);
     }
+
 
     /**
      * A pretty simple notification function, sends a message to the user but only works if app is running or currently in background

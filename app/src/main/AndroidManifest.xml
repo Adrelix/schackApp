@@ -8,9 +8,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:screenOrientation="portrait"
+        >
         <activity android:name=".LoginScreen"
             android:noHistory="true"
+            android:screenOrientation="portrait"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,26 +25,31 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/noAnimTheme"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".RulesPage"
             android:theme="@style/noAnimTheme"
             android:noHistory="true"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".RegisterNewProfile"
             android:theme="@style/noAnimTheme"
             android:noHistory="true"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".NewGameSettings"
             android:theme="@style/AppTheme.PopUp"
             android:noHistory="true"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".ProfilePage"
             android:theme="@style/noAnimTheme"
             android:noHistory="true"
+            android:screenOrientation="portrait"
             />
 
         <meta-data

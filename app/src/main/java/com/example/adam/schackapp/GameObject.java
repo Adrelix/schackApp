@@ -14,7 +14,7 @@ import java.io.Serializable;
  *   piecePositions: should be some stored information about all pieces and there positions, not sure if it can be implemented as the whole Pieces structure or if a clever string should be made
  *
  * */
-public class GameObject implements Serializable {
+public class GameObject implements Serializable, Comparable<GameObject> {
     private String gameID;
     private String playerOne;
     private String playerTwo;
@@ -27,6 +27,12 @@ public class GameObject implements Serializable {
     private String lastMoveDate;
     private String playerOneQuote;
     private String playerTwoQuote;
+
+
+    @Override
+    public int compareTo(GameObject game) {
+        return (game.getLastMoveDate().compareTo(this.getLastMoveDate()));
+    }
 
     public GameObject(){
     }
@@ -131,6 +137,8 @@ public class GameObject implements Serializable {
     public String getLastMoveDate() {
         return lastMoveDate;
     }
+
+
 
 
 }
