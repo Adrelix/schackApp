@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +27,7 @@ public class NewGameSettings extends AppCompatActivity {
     private ProfileObject profile;
 
     String playerName;
+    Boolean vsadam = false;
     String currentDate;
 
     @Override
@@ -33,11 +35,9 @@ public class NewGameSettings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_game_settings_layout);
 
-
+        //Get current state
         profile = (ProfileObject) getIntent().getSerializableExtra("profileToLoad");
-
         playerName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        currentDate = new SimpleDateFormat("yy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date());
 
         //Set the window dimensions
         DisplayMetrics dm = new DisplayMetrics();
@@ -56,10 +56,21 @@ public class NewGameSettings extends AppCompatActivity {
 
 
 
-    public void startNewGame(View view){
-        EditText opponentNameET = (EditText) findViewById(R.id.opponent_edit_text);
-        final String opponentName = opponentNameET.getText().toString().trim();
 
+    public void startNewGame(View view){
+        String opName;
+        Switch randomOpp = (Switch) findViewById(R.id.random_opponent);
+
+        //TODO change to actual random opp
+        if(randomOpp.isChecked()){
+             opName = "Adrelix";
+        }
+        else {
+            EditText opponentNameET = (EditText) findViewById(R.id.opponent_edit_text);
+            opName = opponentNameET.getText().toString().trim();
+        }
+
+        final String opponentName = opName;
         //whenever a query with this valueEventListener is called it runs the sequence below
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
@@ -75,6 +86,7 @@ public class NewGameSettings extends AppCompatActivity {
                         Toast.makeText(NewGameSettings.this, "Found user: " + opponent.getName(), Toast.LENGTH_SHORT).show();
                         //TODO Create game with both users
                         String createdID = databaseGames.push().getKey();           //Get next item ID
+                        String currentDate = new SimpleDateFormat("yy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
                         GameObject newGame = new GameObject(createdID, playerName, opponentName, profile.getQuote(), opponent.getQuote(), currentDate, 3);
                         databaseGames.child(createdID).setValue(newGame);                                     //Add Profile to database
                         finish();

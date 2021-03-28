@@ -11,6 +11,7 @@
     <string name="repeat_password">Repeat password</string>
     <string name="login_register">Register \nnew profile</string>
     <string name="new_game">New Game</string>
+    <string name="random_opponent">Random opponent</string>
     <string name="opponent">Opponent:</string>
     <string name="type_name">Type name...</string>
     <string name="type_quote">Select a quote...</string>

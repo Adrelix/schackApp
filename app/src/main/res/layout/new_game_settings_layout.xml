@@ -95,4 +95,14 @@
         app:layout_constraintStart_toStartOf="@+id/opponent_text"
         app:layout_constraintTop_toBottomOf="@+id/opponent_text" />
 
+    <Switch
+        android:id="@+id/random_opponent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/random_opponent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/opponent_edit_text" />
+
 </android.support.constraint.ConstraintLayout>

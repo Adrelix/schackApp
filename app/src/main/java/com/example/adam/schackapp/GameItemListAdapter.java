@@ -18,8 +18,6 @@ public class GameItemListAdapter extends ArrayAdapter<String> {
 
     public GameItemListAdapter(Activity context, String[] maintitle,String[] subtitle, Integer[] imgid) {
         super(context, R.layout.game_list_item, maintitle);
-        // TODO Auto-generated constructor stub
-
         this.context=context;
         this.maintitle=maintitle;
         this.subtitle=subtitle;

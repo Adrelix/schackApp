@@ -70,8 +70,8 @@ public class GameBoard extends AppCompatActivity {
     Tiles[] tiles;
     ArrayList<Piece> pieces;
     Integer[] moves;        //Blåa rutorna som highlightas, dvs möjliga dragen
-    String playerColor;          //indicates whos turn it is, default white
-    int prevSelectedTile = -1;                  //shows the index of previously selected tiles, neg number for none selected
+    String playerColor;     //indicates whos turn it is, default white
+    int prevSelectedTile = -1;   //shows the index of previously selected tiles, neg number for none selected
     boolean moveDisabled = false;
 
     ProfileObject profile;
@@ -438,11 +438,6 @@ public class GameBoard extends AppCompatActivity {
     /***/
     private void changeTurn(){
         updatePieces();
-
-
-        //**********************************//
-        //THIS IS WHERE THE TURN IS CHANGED
-        //**********************************//
         game.changeTurn();
         checkIfCheckMate();
         pushGame(game);
@@ -556,7 +551,6 @@ public class GameBoard extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-
         };
 
         System.out.println("ATTEMPTING TO FETCH GAME WITH ID: " + game.getGameID());
@@ -635,7 +629,6 @@ public class GameBoard extends AppCompatActivity {
     {
         super.onDestroy();
         database.getReference().child("games").removeEventListener(valueEventListener);
-
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("profileToLoad", profile);
