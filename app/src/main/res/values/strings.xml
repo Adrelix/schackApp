@@ -5,6 +5,7 @@
     <string name="sign_out">Sign Out</string>
     <string name="profile">Profile</string>
     <string name="rules">Rules</string>
+    <string name="rules_text">Basically chess, but pieces are allowed to move in the third dimension. All other rules remains. (Gonna expand later lol)</string>
     <string name="email">Email</string>
     <string name="why_email">We only ask for email for account security reasons. We will never send you spam, offers, etc.</string>
     <string name="login_password">Password</string>
