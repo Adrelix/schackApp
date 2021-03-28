@@ -1,21 +1,15 @@
 package com.example.adam.schackapp;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -452,7 +446,7 @@ public class GameBoard extends AppCompatActivity {
         //Load in names and quotes
         if(game.getPlayerOne().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())){
             opponentName = game.getPlayerTwo();
-            opponentQuote = "\"" + game.getPlayerTwoQuote() + "\"";
+            opponentQuote = game.getPlayerTwoQuote();
             playerColor = "white";
         }
         else {

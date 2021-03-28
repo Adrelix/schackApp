@@ -38,7 +38,7 @@ public class ProfilePage extends AppCompatActivity {
         gamesLostAnswer.setText(profile.getAmountOfGames()-profile.getAmountOfWins() + "");
         String winRate = "" + (double) profile.getAmountOfWins()/ (double) profile.getAmountOfGames();
         winRateAnswer.setText(winRate);
-        playerQuote.setText("\"" + profile.getQuote() + "\"");
+        playerQuote.setText(profile.getQuote());
         playerNameView.setText(playerName);
 
 
