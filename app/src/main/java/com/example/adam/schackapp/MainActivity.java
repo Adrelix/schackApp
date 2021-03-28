@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 yourTurnButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
                 opponentTurnButton.setForeground(null);
                 finishedGameButton.setForeground(null);
-                plusButton.setVisibility(View.VISIBLE);
+               // plusButton.setVisibility(View.VISIBLE);
                 updateGameList();
             }
         });
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 yourTurnButton.setForeground(null);
                 opponentTurnButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
                 finishedGameButton.setForeground(null);
-                plusButton.setVisibility(View.GONE);
+               // plusButton.setVisibility(View.GONE);
                 updateGameList();
             }
         });
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 yourTurnButton.setForeground(null);
                 opponentTurnButton.setForeground(null);
                 finishedGameButton.setForeground(getResources().getDrawable(R.drawable.active_button_background));
-                plusButton.setVisibility(View.GONE);
+              //  plusButton.setVisibility(View.GONE);
                 updateGameList();
             }
         });
