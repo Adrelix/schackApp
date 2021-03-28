@@ -338,6 +338,8 @@ public class GameBoard extends AppCompatActivity {
      * TODO test this
      * */
     private void checkIfCheckMate(){
+        System.out.println("CHECKING IF CHECKMATE");
+
         for(Piece piece : pieces){
             if((piece.color.equals("white") && game.getGameStatus()==1) || piece.color.equals("black") && game.getGameStatus()==2){
                 Integer[] moveOptions = piece.getMoves(pieces, amountOfTiles, -1);
@@ -348,6 +350,8 @@ public class GameBoard extends AppCompatActivity {
                 }
             }
         }
+        System.out.println("IT IS CHECKMATE");
+
         //TODO Increment both players amountOfGames and increase winners amountOfWins here
        game.setGameStatus(0);
     }
