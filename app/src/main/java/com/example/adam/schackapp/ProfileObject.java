@@ -7,7 +7,7 @@ public class ProfileObject implements Serializable {
     private String name;
     private String password;
     private String email;
-    private String quote = "Jag är inte cool nog för att ha fått min quote fixad";
+    private String quote;
     private int amountOfGames;
     private int amountOfWins;
 
@@ -15,11 +15,12 @@ public class ProfileObject implements Serializable {
 
     }
 
-    public ProfileObject(String profileID, String name, String password, String email) {
+    public ProfileObject(String profileID, String name, String password, String email, String quote) {
         this.profileID = profileID;
         this.name = name;
         this.password = password;
         this.email = email;
+        this.quote = quote;
         this.amountOfGames = 0;
         this.amountOfWins = 0;
     }

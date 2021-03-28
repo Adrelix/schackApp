@@ -25,6 +25,18 @@
         app:layout_constraintVertical_bias="0.19" />
 
     <EditText
+        android:id="@+id/profile_quote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/type_quote"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/profile_email"
+        app:layout_constraintStart_toStartOf="@+id/profile_email"
+        app:layout_constraintTop_toBottomOf="@+id/profile_email" />
+
+    <EditText
         android:id="@+id/profile_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -81,10 +93,12 @@
         android:id="@+id/why_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="@string/why_email"
         android:textAlignment="center"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@+id/profile_email"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/profile_email"
-        app:layout_constraintTop_toBottomOf="@+id/profile_email" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_quote" />
 </android.support.constraint.ConstraintLayout>

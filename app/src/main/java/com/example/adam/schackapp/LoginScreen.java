@@ -1,9 +1,7 @@
 package com.example.adam.schackapp;
 
-
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +23,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 //TODO change the database system from Realtime Database to Cloud Firestore
-
 public class LoginScreen extends AppCompatActivity {
 
     FirebaseDatabase database;
@@ -33,8 +30,6 @@ public class LoginScreen extends AppCompatActivity {
     ValueEventListener valueEventListener;
     FirebaseAuth mAuth;
     ProfileObject userProfile;
-
-
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor sharedPrefEditor;
 
@@ -108,16 +103,13 @@ public class LoginScreen extends AppCompatActivity {
 
 
         if(!TextUtils.isEmpty(attemptedEmail) && !TextUtils.isEmpty(attemptedPassword)) {
-
             //Use Firebase Authentication to sign in user
             mAuth.signInWithEmailAndPassword(attemptedEmail.toLowerCase(), attemptedPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                        Toast.makeText(getApplicationContext(), "Welcome back\n" + FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), Toast.LENGTH_LONG).show();
-
-
-                        //Get profile information from database
+                        //Get profile information from
                         valueEventListener = new ValueEventListener() {   //whenever a query with this valueEventListener is called it runs the sequence below
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -144,14 +136,8 @@ public class LoginScreen extends AppCompatActivity {
                         };
                         Query query = FirebaseDatabase.getInstance().getReference("profiles").orderByChild("email").equalTo(attemptedEmail);      //Fetch all profiles that match the attemptedEmail
                         query.addValueEventListener(valueEventListener);
-
-
-
-
-
                     } else {
                         Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_LONG).show();
-
                         writtenEmail.setText("");
                         writtenPw.setText("");
                         sharedPrefEditor.remove("storedPassword");

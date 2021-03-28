@@ -31,11 +31,12 @@ public class RegisterNewProfile extends AppCompatActivity {
     private String attemptedPw;
     private String attemptedPw2;
     private String attemptedEmail;
+    private String quote;
     EditText nameET;
     EditText pwET;
     EditText pw2ET;
     EditText emailET;
-
+    EditText quoteET;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,10 +56,13 @@ public class RegisterNewProfile extends AppCompatActivity {
                 pwET = (EditText) findViewById(R.id.profile_password);
                 pw2ET = (EditText) findViewById(R.id.repeat_password);
                 emailET = (EditText) findViewById(R.id.profile_email);
+                quoteET = (EditText) findViewById(R.id.profile_quote);
+
                 attemptedName = nameET.getText().toString().trim();
                 attemptedPw = pwET.getText().toString().trim();
                 attemptedPw2 = pw2ET.getText().toString().trim();
                 attemptedEmail = emailET.getText().toString().trim();
+                quote = quoteET.getText().toString().trim();
 
 
 
@@ -74,7 +78,6 @@ public class RegisterNewProfile extends AppCompatActivity {
 
 
     private void createProfile(){
-        //TODO validate the input with REGEX
 
         //Checks if the username is available
         if(!checkIfProfileAvailable()){
@@ -91,8 +94,7 @@ public class RegisterNewProfile extends AppCompatActivity {
             Toast.makeText(RegisterNewProfile.this, "Minimum length of password should be 6", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        //Checks email validity
+        //Checks email validity using regex
         if(!Patterns.EMAIL_ADDRESS.matcher(attemptedEmail).matches()){
             Toast.makeText(RegisterNewProfile.this, "Please enter a valid email", Toast.LENGTH_SHORT).show();
             return;
@@ -100,9 +102,7 @@ public class RegisterNewProfile extends AppCompatActivity {
 
 
 
-
-
-        //The more advanced built in firebase authentication
+        //Firebase authentication
         mAuth.createUserWithEmailAndPassword(attemptedEmail.toLowerCase(), attemptedPw).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -123,7 +123,7 @@ public class RegisterNewProfile extends AppCompatActivity {
 
                     //Old method to create profile, used the database and not the auth function of firebase, still kinda useful as it saves username as key and other information with it
                     createdID = databaseProfiles.push().getKey();           //Get next item ID
-                    ProfileObject newProfile = new ProfileObject(createdID, attemptedName, attemptedPw, attemptedEmail);    //Create profile object
+                    ProfileObject newProfile = new ProfileObject(createdID, attemptedName, attemptedPw, attemptedEmail, quote);    //Create profile object
                     databaseProfiles.child(createdID).setValue(newProfile);                                     //Add Profile to database
 
 
