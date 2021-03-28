@@ -81,13 +81,9 @@ public class GameBoard extends AppCompatActivity {
         setContentView(R.layout.game_board_layout);
         profile = (ProfileObject) getIntent().getSerializableExtra("profileToLoad");
 
-
-        //make the statusbar(maybe?) and bottom (android) navbar black
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setNavigationBarColor(getResources().getColor(R.color.black));
         }
-
-
 
         //Load information from intent
         game = (GameObject) getIntent().getSerializableExtra("gameToLoad");
@@ -95,7 +91,6 @@ public class GameBoard extends AppCompatActivity {
         loadInGame();
 
         keepGameUpdated();
-
 
         TextView opponentNameView = findViewById(R.id.playerName);
         opponentNameView.setText(opponentName);
@@ -106,9 +101,8 @@ public class GameBoard extends AppCompatActivity {
         databaseProfiles = database.getReference("profiles");
         databaseGames = database.getReference("games");
 
-
-
         tiles = new Tiles[amountOfTiles];
+
         //Here we assert the resource used for the black and white tile
         BLACK_TILE = R.drawable.black_tile3;
         WHITE_TILE = R.drawable.white_tile3;
@@ -231,7 +225,7 @@ public class GameBoard extends AppCompatActivity {
                 else if(tiles[move].color.equals("black")){tiles[move].button.setBackground(getResources().getDrawable(BLACK_TILE));}
             }
 
-            prevSelectedTile = -1;    //reset value on prevselectedtile
+            prevSelectedTile = -1;
         }
         //There is not a prevSelect tile
         else{
