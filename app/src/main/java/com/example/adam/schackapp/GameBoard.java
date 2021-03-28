@@ -451,7 +451,7 @@ public class GameBoard extends AppCompatActivity {
         }
         else {
             opponentName = game.getPlayerOne();
-            opponentQuote = "\"" + game.getPlayerOneQuote() + "\"";
+            opponentQuote = game.getPlayerOneQuote();
             playerColor = "black";
         }
 
