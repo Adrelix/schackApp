@@ -15,7 +15,7 @@
     <string name="random_opponent">Random opponent</string>
     <string name="opponent">Opponent:</string>
     <string name="type_name">Type name...</string>
-    <string name="type_quote">Type a quote...</string>
+    <string name="type_quote">Write a quote...</string>
     <string name="create_screen_tip">Big brain players do big brain moves. If you find yourself doing small brain moves, odds are you are a small brain player.</string>
     <string name="create">Create</string>
     <string name="pawn_promotion">Pawn Promotion</string>

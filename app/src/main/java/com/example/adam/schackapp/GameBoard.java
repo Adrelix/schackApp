@@ -29,7 +29,7 @@ import java.util.Locale;
 
 
 
-/*
+/* NOTE TO MYSELF
  * Database plan:
  *
  *   User(String id, String name, String password, Drawable? profilePic, String quote)

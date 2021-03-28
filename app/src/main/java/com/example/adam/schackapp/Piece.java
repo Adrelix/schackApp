@@ -105,7 +105,7 @@ public class Piece {
 
         //TODO implement passant-move
 
-        if(this.color.equals("white")){
+        if(this.color.equals("black")){
             //Check same board row in front of piece
             for(int i = 0; i < boardSize; i = i+64){
                 if(currentPosition >= i && currentPosition < i+64-8 ){      //check that piece isn't on last row of board
@@ -138,7 +138,7 @@ public class Piece {
             }
         }
 
-        else if(this.color.equals("black")){
+        else if(this.color.equals("white")){
             //Check same board row in front of piece
             for(int i = 0; i < boardSize; i = i+64){
                 if(currentPosition >= i+8 && currentPosition < i+64 ){      //check that piece isn't on last row of board

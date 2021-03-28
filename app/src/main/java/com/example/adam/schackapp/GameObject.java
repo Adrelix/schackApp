@@ -52,13 +52,13 @@ public class GameObject implements Serializable, Comparable<GameObject> {
     }
 
     private String generateStartPositions(int amountOfBoards){
-        String startPositions = "WTWHWLWDWKWLWHWTWBWBWBWBWBWBWBWB";
+        String startPositions = "BTBHBLBDBKBLBHBTBBBBBBBBBBBBBBBB";
 
         //Filling up whitespace in string, 64 for each board minus start/end 16 where pieces stand
         for(int i = 0; i < amountOfBoards*64 - 32; i++){
             startPositions += "00";
         }
-        startPositions += "BBBBBBBBBBBBBBBBBTBHBLBKBDBLBHBT";
+        startPositions += "WBWBWBWBWBWBWBWBWTWHWLWKWDWLWHWT";
         return startPositions;
     }
 
